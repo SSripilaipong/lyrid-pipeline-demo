@@ -8,7 +8,7 @@ from demo.url_repo import UrlRepo
 
 def main():
     system = ActorSystem()
-    url_repo = system.spawn("url_repo", UrlRepo, initial_message=common.Start())
+    url_repo = system.spawn(UrlRepo(), initial_message=common.Start())
     time.sleep(1)
 
     print(system.ask(url_repo, common.Stop()))
