@@ -5,15 +5,15 @@ from lyrid import Message
 
 @dataclass
 class GetUrlAfter(Message):
-    order: int
+    index: int
 
 
 @dataclass
 class UrlData(Message):
-    order: int
+    index: int
     data: str
 
 
 @dataclass
 class UrlDataAck(Message):
-    order: int
+    index: int
