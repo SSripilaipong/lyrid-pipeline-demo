@@ -15,6 +15,10 @@ class UrlRepoBase(Actor):
     global_index_to_send: int = 0
     urls: List[str] = field(default_factory=list)
 
+    @switch.message(type=SubscribeUrlData)
+    def subscribe(self, sender: Address, message: SubscribeUrlData):
+        self.tell(sender, SubscribeUrlDataAck(message.subscription_key))
+
     def _handle_if_request_is_repeated(self, address: Address, subscriber: str, requested_index: int) -> bool:
         if requested_index < self.latest_requested_indices.get(subscriber, -1):  # ignore old request
             return True
@@ -55,10 +59,6 @@ class UrlRepo(UrlRepoBase):
     def add_url(self, sender: Address, message: AddUrl):
         self.urls.append(message.url)
         self.tell(sender, AddUrlAck(message.ref_id))
-
-    @switch.message(type=SubscribeUrlData)
-    def subscribe(self, sender: Address, message: SubscribeUrlData):
-        self.tell(sender, SubscribeUrlDataAck(message.subscription_key))
 
     @switch.message(type=GetUrlAfter)
     def get_url_after_index(self, sender: Address, message: GetUrlAfter):

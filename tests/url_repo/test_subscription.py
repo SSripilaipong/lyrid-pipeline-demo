@@ -2,12 +2,12 @@ from lyrid import Address
 from lyrid.testing import ActorTester, CapturedMessage
 
 from demo.core.url_repo import SubscribeUrlData, SubscribeUrlDataAck
-from demo.url_repo import UrlRepo
+from demo.url_repo import EmptyUrlRepo
 
 
 def test_should_tell_back_with_ack_message():
     subscriber = Address("$.someone")
-    tester = ActorTester(UrlRepo())
+    tester = ActorTester(EmptyUrlRepo())
 
     tester.simulate.tell(SubscribeUrlData("abc"), by=subscriber)
 
