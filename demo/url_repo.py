@@ -24,9 +24,12 @@ class UrlRepo(Actor):
 
     @switch.message(type=GetUrlAfter)
     def get_url_after_index(self, sender: Address, message: GetUrlAfter):
-        index = self.subscription_indices.get(message.subscription)
-        if index is None:
-            index = self.subscription_indices[message.subscription] = self.current_index
+        index = self.subscription_indices.get(message.subscription, -1)
+        if index <= message.index:
+            index = self.current_index
+
+        self.subscription_indices[message.subscription] = index
+        if index == self.current_index:
             self.current_index += 1
 
         self.tell(sender, UrlData(index, self.urls[index]))
