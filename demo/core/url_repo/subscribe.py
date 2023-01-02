@@ -3,10 +3,11 @@ from dataclasses import dataclass
 from lyrid import Message
 
 
+@dataclass
 class SubscribeUrlData(Message):
-    pass
+    subscription_key: str
 
 
 @dataclass
 class SubscribeUrlDataAck(Message):
-    pass
+    subscription_key: str

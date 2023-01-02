@@ -9,7 +9,7 @@ from demo.core.url_repo import SubscribeUrlData, SubscribeUrlDataAck, AddUrl, Ad
 @use_switch
 @dataclass
 class UrlRepo(Actor):
-    subscription_indices: Dict[Address, int] = field(default_factory=dict)
+    subscription_indices: Dict[str, int] = field(default_factory=dict)
     current_index: int = 0
     urls: List[str] = field(default_factory=list)
 
@@ -19,14 +19,14 @@ class UrlRepo(Actor):
         self.tell(sender, AddUrlAck(message.ref_id))
 
     @switch.message(type=SubscribeUrlData)
-    def subscribe(self, sender: Address):
-        self.tell(sender, SubscribeUrlDataAck())
+    def subscribe(self, sender: Address, message: SubscribeUrlData):
+        self.tell(sender, SubscribeUrlDataAck(message.subscription_key))
 
     @switch.message(type=GetUrlAfter)
-    def get_url_after_index(self, sender: Address):
-        index = self.subscription_indices.get(sender)
+    def get_url_after_index(self, sender: Address, message: GetUrlAfter):
+        index = self.subscription_indices.get(message.subscription)
         if index is None:
-            index = self.subscription_indices[sender] = self.current_index
+            index = self.subscription_indices[message.subscription] = self.current_index
             self.current_index += 1
 
         self.tell(sender, UrlData(index, self.urls[index]))
