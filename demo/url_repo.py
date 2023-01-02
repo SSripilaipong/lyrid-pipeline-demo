@@ -45,6 +45,12 @@ class UrlRepoBase(Actor):
 @dataclass
 class UrlRepo(UrlRepoBase):
 
+    @classmethod
+    def of(cls, self: UrlRepoBase) -> 'UrlRepo':
+        return cls(
+            self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send, self.urls,
+        )
+
     @switch.message(type=AddUrl)
     def add_url(self, sender: Address, message: AddUrl):
         self.urls.append(message.url)
@@ -58,6 +64,8 @@ class UrlRepo(UrlRepoBase):
     def get_url_after_index(self, sender: Address, message: GetUrlAfter):
         self._send_url_to_requested_index(sender, message.subscription, message.index)
 
+    @switch.after_receive()
+    def after_receive(self):
         if self.global_index_to_send > len(self.urls) - 1:
             self.become(EmptyUrlRepo.of(self))
 
@@ -68,7 +76,7 @@ class EmptyUrlRepo(UrlRepoBase):
     waiting_subscribers: Deque[Tuple[Address, str, int]] = field(default_factory=deque)
 
     @classmethod
-    def of(cls, self: UrlRepoBase, waiting_subscribers: List[Tuple[Address, str, int]] = None) -> 'EmptyUrlRepo':
+    def of(cls, self: UrlRepoBase, waiting_subscribers: List[Tuple[Address, str, int]] | None = None) -> 'EmptyUrlRepo':
         return cls(
             self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send,
             self.urls, waiting_subscribers=deque(waiting_subscribers or []),
@@ -84,8 +92,13 @@ class EmptyUrlRepo(UrlRepoBase):
     @switch.message(type=AddUrl)
     def add_url(self, sender: Address, message: AddUrl):
         self.urls.append(message.url)
-
         self.tell(sender, AddUrlAck(message.ref_id))
 
-        address, subscriber, requested_index = self.waiting_subscribers.popleft()
-        self._send_url_to_requested_index(address, subscriber, requested_index)
+        if self.waiting_subscribers:
+            address, subscriber, requested_index = self.waiting_subscribers.popleft()
+            self._send_url_to_requested_index(address, subscriber, requested_index)
+
+    @switch.after_receive()
+    def after_receive(self):
+        if self.global_index_to_send <= len(self.urls) - 1 and not self.waiting_subscribers:
+            self.become(UrlRepo.of(self))

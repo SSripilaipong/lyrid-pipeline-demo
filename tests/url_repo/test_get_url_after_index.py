@@ -2,13 +2,13 @@ from lyrid import Address
 from lyrid.testing import ActorTester, CapturedMessage
 
 from demo.core.url_repo import SubscribeUrlData, AddUrl, GetUrlAfter, UrlData, AddUrlAck
-from demo.url_repo import UrlRepo, EmptyUrlRepo
+from demo.url_repo import EmptyUrlRepo
 
 
 # noinspection DuplicatedCode
 def test_should_allow_subscriber_to_get_url_after_index():
     subscriber = Address("$.someone")
-    tester = ActorTester(UrlRepo())
+    tester = ActorTester(EmptyUrlRepo())
     tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
     tester.simulate.tell(SubscribeUrlData("xxx"), by=subscriber)
     tester.capture.clear_messages()
@@ -21,7 +21,7 @@ def test_should_allow_subscriber_to_get_url_after_index():
 def test_should_pass_next_url_for_the_next_subscriber_if_asked():
     subscriber1 = Address("$.someone.1")
     subscriber2 = Address("$.someone.2")
-    tester = ActorTester(UrlRepo())
+    tester = ActorTester(EmptyUrlRepo())
     tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
     tester.simulate.tell(AddUrl("https://example.com/1", ref_id="y"), by=Address("$"))
     tester.simulate.tell(SubscribeUrlData("a"), by=subscriber1)
@@ -38,7 +38,7 @@ def test_should_pass_next_url_for_the_next_subscriber_if_asked():
 def test_should_send_the_same_url_when_the_same_subscriber_requests_at_the_same_index():
     subscriber1 = Address("$.someone.1")
     subscriber2 = Address("$.someone.2")
-    tester = ActorTester(UrlRepo())
+    tester = ActorTester(EmptyUrlRepo())
     tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
     tester.simulate.tell(SubscribeUrlData("a"), by=subscriber1)
     tester.capture.clear_messages()
@@ -56,7 +56,7 @@ def test_should_send_the_same_url_when_the_same_subscriber_requests_at_the_same_
 # noinspection DuplicatedCode
 def test_should_send_the_latest_url_when_the_same_subscriber_requests_at_later_index():
     subscriber = Address("$.someone.1")
-    tester = ActorTester(UrlRepo())
+    tester = ActorTester(EmptyUrlRepo())
     tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
     tester.simulate.tell(AddUrl("https://example.com/1", ref_id="y"), by=Address("$"))
     tester.simulate.tell(SubscribeUrlData("a"), by=subscriber)
