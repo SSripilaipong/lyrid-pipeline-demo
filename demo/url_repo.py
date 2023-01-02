@@ -1,5 +1,6 @@
+from collections import deque
 from dataclasses import dataclass, field
-from typing import List, Dict
+from typing import List, Dict, Deque, Tuple
 
 from lyrid import Actor, use_switch, switch, Address
 
@@ -8,11 +9,16 @@ from demo.core.url_repo import SubscribeUrlData, SubscribeUrlDataAck, AddUrl, Ad
 
 @use_switch
 @dataclass
-class UrlRepo(Actor):
-    subscription_indices: Dict[str, int] = field(default_factory=dict)
-    subscription_latest_requested_indices: Dict[str, int] = field(default_factory=dict)
-    current_index: int = 0
+class UrlRepoBase(Actor):
+    latest_returned_indices: Dict[str, int] = field(default_factory=dict)
+    latest_requested_indices: Dict[str, int] = field(default_factory=dict)
+    global_index_to_return: int = 0
     urls: List[str] = field(default_factory=list)
+
+
+@use_switch
+@dataclass
+class UrlRepo(UrlRepoBase):
 
     @switch.message(type=AddUrl)
     def add_url(self, sender: Address, message: AddUrl):
@@ -25,16 +31,43 @@ class UrlRepo(Actor):
 
     @switch.message(type=GetUrlAfter)
     def get_url_after_index(self, sender: Address, message: GetUrlAfter):
-        if message.index < self.subscription_latest_requested_indices.get(message.subscription, -1):
+        requested_index, subscriber = message.index, message.subscription
+
+        if requested_index < self.latest_requested_indices.get(subscriber, -1):  # ignore old request
+            return
+        self.latest_requested_indices[subscriber] = requested_index
+
+        latest_returned_index = self.latest_returned_indices.get(subscriber, -1)
+        index_to_return = latest_returned_index if requested_index < latest_returned_index else self.global_index_to_return
+
+        if index_to_return > len(self.urls) - 1:
+            self.become(EmptyUrlRepo.of(self, waiting_subscribers=[(sender, subscriber)]))
             return
 
-        index = self.subscription_indices.get(message.subscription, -1)
-        if index <= message.index:
-            index = self.current_index
+        self.latest_returned_indices[subscriber] = index_to_return
+        if index_to_return == self.global_index_to_return:
+            self.global_index_to_return += 1
 
-        self.subscription_indices[message.subscription] = index
-        if index == self.current_index:
-            self.current_index += 1
-        self.subscription_latest_requested_indices[message.subscription] = message.index
+        self.tell(sender, UrlData(index_to_return, self.urls[index_to_return]))
 
-        self.tell(sender, UrlData(index, self.urls[index]))
+
+@use_switch
+@dataclass
+class EmptyUrlRepo(UrlRepoBase):
+    waiting_subscribers: Deque[Tuple[Address, str]] = field(default_factory=deque)
+
+    @classmethod
+    def of(cls, self: UrlRepoBase, waiting_subscribers: List[Tuple[Address, str]]) -> 'EmptyUrlRepo':
+        return cls(
+            self.latest_returned_indices, self.latest_requested_indices, self.global_index_to_return,
+            self.urls, waiting_subscribers=deque(waiting_subscribers),
+        )
+
+    @switch.message(type=AddUrl)
+    def add_url(self, sender: Address, message: AddUrl):
+        self.urls.append(message.url)
+        index_to_return = len(self.urls) - 1
+        address, subscriber = self.waiting_subscribers.popleft()
+
+        self.tell(sender, AddUrlAck(message.ref_id))
+        self.tell(address, UrlData(index_to_return, self.urls[index_to_return]))

@@ -9,6 +9,6 @@ class AddUrl(Message):
     ref_id: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class AddUrlAck(Message):
     ref_id: str

@@ -1,7 +1,7 @@
 from lyrid import Address
 from lyrid.testing import ActorTester, CapturedMessage
 
-from demo.core.url_repo import SubscribeUrlData, AddUrl, GetUrlAfter, UrlData
+from demo.core.url_repo import SubscribeUrlData, AddUrl, GetUrlAfter, UrlData, AddUrlAck
 from demo.url_repo import UrlRepo
 
 
@@ -83,3 +83,19 @@ def test_should_ignore_old_request_from_subscriber():
     tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
 
     assert tester.capture.get_messages() == []
+
+
+# noinspection DuplicatedCode
+def test_should_send_url_to_waiting_subscriber_when_arrives():
+    subscriber = Address("$.someone.1")
+    tester = ActorTester(UrlRepo())
+    tester.simulate.tell(SubscribeUrlData("a"), by=subscriber)
+    tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
+    tester.capture.clear_messages()
+
+    tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
+
+    assert set(tester.capture.get_messages()) == {
+        CapturedMessage(Address("$"), AddUrlAck(ref_id="x")),
+        CapturedMessage(subscriber, UrlData(0, "https://example.com/0"))
+    }

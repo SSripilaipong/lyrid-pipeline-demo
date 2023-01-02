@@ -9,7 +9,7 @@ class GetUrlAfter(Message):
     index: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class UrlData(Message):
     index: int
     data: str
