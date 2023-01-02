@@ -12,8 +12,3 @@ class GetUrlAfter(Message):
 class UrlData(Message):
     index: int
     data: str
-
-
-@dataclass
-class UrlDataAck(Message):
-    index: int
