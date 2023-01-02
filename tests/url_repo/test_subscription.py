@@ -13,3 +13,13 @@ def test_should_tell_back_with_ack_message():
     tester.simulate.tell(SubscribeUrlData(), by=consumer)
 
     assert tester.capture.get_messages() == [CapturedMessage(consumer, SubscribeUrlDataAck())]
+
+
+def test_should_tell_back_with_ack_message():
+    repo = UrlRepo()
+    tester = ActorTester(repo)
+
+    consumer = Address("$.someone")
+    tester.simulate.tell(SubscribeUrlData(), by=consumer)
+
+    assert tester.capture.get_messages() == [CapturedMessage(consumer, SubscribeUrlDataAck())]
