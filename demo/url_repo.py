@@ -10,6 +10,7 @@ from demo.core.url_repo import SubscribeUrlData, SubscribeUrlDataAck, AddUrl, Ad
 @dataclass
 class UrlRepo(Actor):
     subscription_indices: Dict[str, int] = field(default_factory=dict)
+    subscription_latest_requested_indices: Dict[str, int] = field(default_factory=dict)
     current_index: int = 0
     urls: List[str] = field(default_factory=list)
 
@@ -24,6 +25,9 @@ class UrlRepo(Actor):
 
     @switch.message(type=GetUrlAfter)
     def get_url_after_index(self, sender: Address, message: GetUrlAfter):
+        if message.index < self.subscription_latest_requested_indices.get(message.subscription, -1):
+            return
+
         index = self.subscription_indices.get(message.subscription, -1)
         if index <= message.index:
             index = self.current_index
@@ -31,5 +35,6 @@ class UrlRepo(Actor):
         self.subscription_indices[message.subscription] = index
         if index == self.current_index:
             self.current_index += 1
+        self.subscription_latest_requested_indices[message.subscription] = message.index
 
         self.tell(sender, UrlData(index, self.urls[index]))
