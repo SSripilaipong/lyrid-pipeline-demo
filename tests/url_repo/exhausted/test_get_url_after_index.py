@@ -55,3 +55,21 @@ def test_should_become_active_when_no_waiting_actor_and_has_an_extra_url():
 
     tester.simulate.tell(AddUrl("https://example.com/1", ref_id="y"), by=Address("$"))
     assert isinstance(tester.current_actor, ActiveUrlRepo)
+
+
+# noinspection DuplicatedCode
+def test_should_send_the_same_url_when_the_same_subscriber_requests_at_the_same_index():
+    subscriber = Address("$.someone.1")
+    tester = create_exhausted_url_repo()
+    tester.simulate.tell(SubscribeUrlData("a"), by=subscriber)
+    tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
+    tester.capture.clear_messages()
+
+    tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
+    first_time = [cm for cm in tester.capture.get_messages() if cm.receiver is subscriber]
+    tester.capture.clear_messages()
+
+    tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
+    second_time = tester.capture.get_messages()
+
+    assert first_time[0].message == second_time[0].message
