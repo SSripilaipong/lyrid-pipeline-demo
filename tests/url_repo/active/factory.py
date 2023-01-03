@@ -13,4 +13,6 @@ def create_active_url_repo_tester_with_urls(urls: List[str]) -> ActorTester:
     tester = ActorTester(EmptyUrlRepo())
     for url in urls:
         tester.simulate.tell(AddUrl(url, ref_id=url), by=Address("$"))
+    tester.capture.clear_messages()
+
     return tester
