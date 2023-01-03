@@ -2,6 +2,7 @@ from lyrid import Address
 from lyrid.testing import CapturedMessage
 
 from demo.core.url_repo import SubscribeUrlData, GetUrlAfter, UrlData
+from demo.url_repo import ExhaustedUrlRepo
 from tests.url_repo.active.factory import create_active_url_repo_tester_with_urls
 
 
@@ -74,3 +75,14 @@ def test_should_ignore_old_request_from_subscriber():
     tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
 
     assert tester.capture.get_messages() == []
+
+
+# noinspection DuplicatedCode
+def test_should_become_exhausted_when_all_urls_have_been_retrieved():
+    subscriber = Address("$.someone.1")
+    tester = create_active_url_repo_tester_with_urls(["https://example.com/0", "https://example.com/1"])
+    tester.simulate.tell(SubscribeUrlData("a"), by=subscriber)
+    tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
+    tester.simulate.tell(GetUrlAfter("a", 0), by=subscriber)
+
+    assert isinstance(tester.current_actor, ExhaustedUrlRepo)
