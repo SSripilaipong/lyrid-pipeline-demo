@@ -9,7 +9,6 @@ def assert_acknowledge_add_url(tester: ActorTester):
 
     tester.simulate.tell(AddUrl("https://example.com/1", ref_id="ref123"), by=consumer)
 
-    print(tester.capture.get_messages())
     assert tester.capture.get_messages() == [CapturedMessage(consumer, AddUrlAck(ref_id="ref123"))]
 
 
