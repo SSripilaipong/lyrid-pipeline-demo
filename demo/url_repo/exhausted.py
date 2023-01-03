@@ -10,11 +10,12 @@ from .base import UrlRepoBase
 
 @use_switch
 @dataclass
-class EmptyUrlRepo(UrlRepoBase):
+class ExhaustedUrlRepo(UrlRepoBase):
     waiting_subscribers: Deque[Tuple[Address, str, int]] = field(default_factory=deque)
 
     @classmethod
-    def of(cls, self: UrlRepoBase, waiting_subscribers: List[Tuple[Address, str, int]] | None = None) -> 'EmptyUrlRepo':
+    def of(cls, self: UrlRepoBase,
+           waiting_subscribers: List[Tuple[Address, str, int]] | None = None) -> 'ExhaustedUrlRepo':
         return cls(
             self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send,
             self.urls, waiting_subscribers=deque(waiting_subscribers or []),
