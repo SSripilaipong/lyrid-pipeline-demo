@@ -2,6 +2,7 @@ from lyrid import Address
 from lyrid.testing import CapturedMessage
 
 from demo.core.url_repo import SubscribeUrlData, AddUrl, GetUrlAfter, UrlData, AddUrlAck
+from demo.url_repo import ExhaustedUrlRepo, ActiveUrlRepo
 from tests.url_repo.exhausted.factory import create_exhausted_url_repo
 
 
@@ -41,3 +42,16 @@ def test_should_send_url_to_multiple_waiting_subscriber_when_urls_arrive():
         CapturedMessage(subscriber1, UrlData(0, "https://example.com/0")),
         CapturedMessage(subscriber2, UrlData(1, "https://example.com/1")),
     }
+
+
+def test_should_become_active_when_no_waiting_actor_and_has_an_extra_url():
+    actor = Address("$.someone.1")
+    tester = create_exhausted_url_repo()
+    tester.simulate.tell(SubscribeUrlData("a"), by=actor)
+    tester.simulate.tell(GetUrlAfter("a", -1), by=actor)
+
+    tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
+    assert isinstance(tester.current_actor, ExhaustedUrlRepo)
+
+    tester.simulate.tell(AddUrl("https://example.com/1", ref_id="y"), by=Address("$"))
+    assert isinstance(tester.current_actor, ActiveUrlRepo)
