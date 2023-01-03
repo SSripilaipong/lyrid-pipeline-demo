@@ -1,8 +1,6 @@
-from lyrid.testing import ActorTester
-
-from demo.url_repo import ActiveUrlRepo
+from tests.url_repo.active.factory import create_active_url_repo_tester_with_urls
 from tests.url_repo.base.assertion import assert_acknowledge_subscription
 
 
 def test_should_acknowledge_subscription():
-    assert_acknowledge_subscription(ActorTester(ActiveUrlRepo()))
+    assert_acknowledge_subscription(create_active_url_repo_tester_with_urls(["https://example.com"]))
