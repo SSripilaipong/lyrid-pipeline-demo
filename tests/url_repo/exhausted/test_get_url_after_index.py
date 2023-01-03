@@ -73,3 +73,19 @@ def test_should_send_the_same_url_when_the_same_subscriber_requests_at_the_same_
     second_time = tester.capture.get_messages()
 
     assert first_time[0].message == second_time[0].message
+
+
+# noinspection DuplicatedCode
+def test_should_ignore_old_request_from_subscriber():
+    subscriber = Address("$.someone.1")
+    tester = create_exhausted_url_repo()
+    tester.simulate.tell(SubscribeUrlData("a"), by=subscriber)
+    tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
+    tester.simulate.tell(AddUrl("https://example.com/0", ref_id="x"), by=Address("$"))
+    tester.simulate.tell(GetUrlAfter("a", 0), by=subscriber)
+    tester.simulate.tell(AddUrl("https://example.com/1", ref_id="y"), by=Address("$"))
+    tester.capture.clear_messages()
+
+    tester.simulate.tell(GetUrlAfter("a", -1), by=subscriber)
+
+    assert tester.capture.get_messages() == []
