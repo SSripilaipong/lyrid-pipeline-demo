@@ -3,12 +3,12 @@ import time
 from lyrid import ActorSystem
 
 from demo.core import common
-from demo.url_repo import UrlRepo
+from demo.url_repo import ActiveUrlRepo
 
 
 def main():
     system = ActorSystem()
-    url_repo = system.spawn(UrlRepo(), initial_message=common.Start())
+    url_repo = system.spawn(ActiveUrlRepo(), initial_message=common.Start())
     time.sleep(1)
 
     print(system.ask(url_repo, common.Stop()))
