@@ -3,16 +3,23 @@ from typing import List
 from lyrid import Address
 from lyrid.testing import ActorTester
 
-from demo.core.url_repo import AddUrl
+from demo.core.url_repo import SubscribeUrlData
 from demo.url_repo import ExhaustedUrlRepo
+from tests.url_repo.action import add_url
 
 
-def create_active_url_repo_tester_with_urls(urls: List[str]) -> ActorTester:
+def create_active_url_repo_tester(*, urls: List[str], subscribers: List[str] | None = None,
+                                  default_address: Address | None = None) -> ActorTester:
     assert len(urls) > 0
+    subscribers = subscribers or []
+    default_address = default_address or Address("$")
 
     tester = ActorTester(ExhaustedUrlRepo())
     for url in urls:
-        tester.simulate.tell(AddUrl(url, ref_id=url), by=Address("$"))
+        add_url(tester, url, ref_id=url, by=default_address)
+
+    for subscription in subscribers:
+        tester.simulate.tell(SubscribeUrlData(subscription), by=default_address)
     tester.capture.clear_messages()
 
     return tester
