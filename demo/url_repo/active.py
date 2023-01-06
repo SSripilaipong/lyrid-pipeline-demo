@@ -13,7 +13,8 @@ class ActiveUrlRepo(UrlRepoBase):
     @classmethod
     def of(cls, self: UrlRepoBase) -> 'ActiveUrlRepo':
         return cls(
-            self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send, self.urls,
+            self.buffer_size, self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send,
+            self.urls,
         )
 
     @switch.message(type=AddUrl)

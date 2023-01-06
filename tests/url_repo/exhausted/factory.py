@@ -12,7 +12,7 @@ def create_exhausted_url_repo(*, subscribers: List[str] | None = None,
     subscribers = subscribers or []
     default_address = default_address or Address("$.tester.default")
 
-    tester = ActorTester(ExhaustedUrlRepo())
+    tester = ActorTester(ExhaustedUrlRepo(123))
 
     for subscription in subscribers:
         tester.simulate.tell(SubscribeUrlData(subscription), by=default_address)

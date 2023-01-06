@@ -9,6 +9,7 @@ from demo.core.url_repo import SubscribeUrlData, SubscribeUrlDataAck, UrlData
 @use_switch
 @dataclass
 class UrlRepoBase(Actor):
+    buffer_size: int
     latest_sent_indices: Dict[str, int] = field(default_factory=dict)
     latest_requested_indices: Dict[str, int] = field(default_factory=dict)
     global_index_to_send: int = 0

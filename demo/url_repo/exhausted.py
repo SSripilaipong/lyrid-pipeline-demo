@@ -17,7 +17,7 @@ class ExhaustedUrlRepo(UrlRepoBase):
     def of(cls, self: UrlRepoBase,
            waiting_subscribers: List[Tuple[Address, str, int]] | None = None) -> 'ExhaustedUrlRepo':
         return cls(
-            self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send,
+            self.buffer_size, self.latest_sent_indices, self.latest_requested_indices, self.global_index_to_send,
             self.urls, waiting_subscribers=deque(waiting_subscribers or []),
         )
 

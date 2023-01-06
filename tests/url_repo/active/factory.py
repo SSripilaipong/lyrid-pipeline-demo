@@ -8,13 +8,13 @@ from demo.url_repo import ExhaustedUrlRepo
 from tests.url_repo.action import add_url
 
 
-def create_active_url_repo_tester(*, urls: List[str], subscribers: List[str] | None = None,
-                                  default_address: Address | None = None) -> ActorTester:
+def create_active_url_repo(*, urls: List[str], subscribers: List[str] | None = None,
+                           default_address: Address | None = None) -> ActorTester:
     assert len(urls) > 0
     subscribers = subscribers or []
     default_address = default_address or Address("$")
 
-    tester = ActorTester(ExhaustedUrlRepo())
+    tester = ActorTester(ExhaustedUrlRepo(123))
     for url in urls:
         add_url(tester, url, ref_id=url, by=default_address)
 

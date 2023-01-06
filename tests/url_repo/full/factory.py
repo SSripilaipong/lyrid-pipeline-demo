@@ -7,12 +7,12 @@ from demo.core.url_repo import SubscribeUrlData
 from demo.url_repo import FullUrlRepo
 
 
-def create_full_url_repo(*, subscribers: List[str] | None = None,
+def create_full_url_repo(*, urls: List[str], subscribers: List[str] | None = None,
                          default_address: Address | None = None) -> ActorTester:
     subscribers = subscribers or []
     default_address = default_address or Address("$.tester.default")
 
-    tester = ActorTester(FullUrlRepo())
+    tester = ActorTester(FullUrlRepo(len(urls), urls=urls))
 
     for subscription in subscribers:
         tester.simulate.tell(SubscribeUrlData(subscription), by=default_address)
