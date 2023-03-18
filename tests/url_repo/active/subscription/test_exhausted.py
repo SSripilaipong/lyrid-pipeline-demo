@@ -4,7 +4,7 @@ from tests.url_repo.active.factory import create_active_url_repo
 
 
 def test_should_become_exhausted_when_all_urls_have_been_retrieved():
-    tester = create_active_url_repo(urls=["https://example.com/0", "https://example.com/1"], subscribers=["a"])
+    tester = create_active_url_repo(urls=["https://example.com/0", "https://example.com/1"])
 
     get_url(tester, subscription="a")
     get_url(tester, subscription="a")
