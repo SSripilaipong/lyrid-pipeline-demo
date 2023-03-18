@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from lyrid import use_switch, switch, Address
 
-from demo.core.url_repo import AddUrl, AddUrlAck, GetUrlAfter
+from demo.core.url_repo import AddUrl, GetUrlAfter
 from .base import UrlRepoBase
 
 
@@ -18,9 +18,8 @@ class ActiveUrlRepo(UrlRepoBase):
         )
 
     @switch.message(type=AddUrl)
-    def add_url(self, sender: Address, message: AddUrl):
+    def add_url(self, message: AddUrl):
         self.urls.append(message.url)
-        self.tell(sender, AddUrlAck(message.ref_id))
 
     @switch.message(type=GetUrlAfter)
     def get_url_after_index(self, sender: Address, message: GetUrlAfter):

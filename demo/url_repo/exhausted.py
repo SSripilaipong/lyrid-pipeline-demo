@@ -4,7 +4,7 @@ from typing import List, Deque, Tuple
 
 from lyrid import use_switch, switch, Address
 
-from demo.core.url_repo import AddUrl, AddUrlAck, GetUrlAfter
+from demo.core.url_repo import AddUrl, GetUrlAfter
 from .base import UrlRepoBase
 
 
@@ -29,9 +29,8 @@ class ExhaustedUrlRepo(UrlRepoBase):
         self.waiting_subscribers.append((sender, message.subscription, message.index))
 
     @switch.message(type=AddUrl)
-    def add_url(self, sender: Address, message: AddUrl):
+    def add_url(self, message: AddUrl):
         self.urls.append(message.url)
-        self.tell(sender, AddUrlAck(message.ref_id))
 
         if self.waiting_subscribers:
             address, subscriber, requested_index = self.waiting_subscribers.popleft()

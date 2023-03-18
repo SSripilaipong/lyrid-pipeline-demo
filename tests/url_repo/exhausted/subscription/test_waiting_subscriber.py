@@ -1,7 +1,7 @@
 from lyrid import Address
 from lyrid.testing import CapturedMessage
 
-from demo.core.url_repo import UrlData, AddUrlAck
+from demo.core.url_repo import UrlData
 from tests.url_repo.action import add_url, get_url_after_index
 from tests.url_repo.exhausted.factory import create_exhausted_url_repo
 
@@ -16,7 +16,6 @@ def test_should_send_url_to_waiting_subscriber_when_a_url_arrives():
     add_url(tester, "https://example.com/0", ref_id="x", by=Address("$"))
 
     assert set(tester.capture.get_messages()) == {
-        CapturedMessage(Address("$"), AddUrlAck(ref_id="x")),
         CapturedMessage(subscriber, UrlData(0, "https://example.com/0"))
     }
 
@@ -33,8 +32,6 @@ def test_should_send_url_to_multiple_waiting_subscriber_when_urls_arrive():
     add_url(tester, "https://example.com/1", ref_id="y", by=Address("$"))
 
     assert set(tester.capture.get_messages()) == {
-        CapturedMessage(Address("$"), AddUrlAck(ref_id="x")),
-        CapturedMessage(Address("$"), AddUrlAck(ref_id="y")),
         CapturedMessage(subscriber1, UrlData(0, "https://example.com/0")),
         CapturedMessage(subscriber2, UrlData(1, "https://example.com/1")),
     }
