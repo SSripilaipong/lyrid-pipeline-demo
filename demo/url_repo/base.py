@@ -15,22 +15,7 @@ class UrlRepoBase(Actor):
     global_index_to_send: int = 0
     urls: List[str] = field(default_factory=list)
 
-    def _handle_if_request_is_repeated(self, address: Address, subscriber: str, requested_index: int) -> bool:
-        if requested_index < self.latest_requested_indices.get(subscriber, -1):  # ignore old request
-            return True
-        self.latest_requested_indices[subscriber] = requested_index
-
-        latest_sent_index = self.latest_sent_indices.get(subscriber, -1)
-        if requested_index < latest_sent_index:
-            self._send_url_at_index(address, subscriber, latest_sent_index)
-            return True
-
-        return False
-
-    def _send_url_to_requested_index(self, address: Address, subscriber: str, requested_index: int):
-        if self._handle_if_request_is_repeated(address, subscriber, requested_index):
-            return
-
+    def _send_url_to_requested_index(self, address: Address, subscriber: str):
         self._send_url_at_index(address, subscriber, self.global_index_to_send)
 
     def _send_url_at_index(self, address: Address, subscriber: str, index_to_send):

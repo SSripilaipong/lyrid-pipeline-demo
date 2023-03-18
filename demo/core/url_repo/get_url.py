@@ -4,9 +4,8 @@ from lyrid import Message
 
 
 @dataclass
-class GetUrlAfter(Message):
+class GetUrl(Message):
     subscription: str
-    index: int
 
 
 @dataclass(frozen=True)
