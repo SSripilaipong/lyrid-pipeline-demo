@@ -15,7 +15,7 @@ def test_should_send_url_to_waiting_user_when_a_url_arrives():
     add_url(tester, "https://example.com/0", ref_id="x", by=Address("$"))
 
     assert tester.capture.get_messages() == [
-        CapturedMessage(user, UrlData(0, "https://example.com/0")),
+        CapturedMessage(user, UrlData("https://example.com/0")),
     ]
 
 
@@ -30,6 +30,6 @@ def test_should_send_url_to_multiple_waiting_user_when_urls_arrive():
     add_url(tester, "https://example.com/1", ref_id="y", by=Address("$"))
 
     assert set(tester.capture.get_messages()) == {
-        CapturedMessage(user1, UrlData(0, "https://example.com/0")),
-        CapturedMessage(user2, UrlData(1, "https://example.com/1")),
+        CapturedMessage(user1, UrlData("https://example.com/0")),
+        CapturedMessage(user2, UrlData("https://example.com/1")),
     }

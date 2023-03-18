@@ -12,7 +12,7 @@ def test_should_allow_user_to_get_url():
 
     get_url(tester, by=user)
 
-    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData(0, "https://example.com/0"))]
+    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData("https://example.com/0"))]
 
 
 def test_should_pass_next_url_for_the_next_user_if_asked():
@@ -23,7 +23,7 @@ def test_should_pass_next_url_for_the_next_user_if_asked():
 
     get_url(tester, by=user)
 
-    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData(1, "https://example.com/1"))]
+    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData("https://example.com/1"))]
 
 
 def test_should_send_the_latest_url_when_the_same_user_requests_at_later_index():
@@ -34,4 +34,4 @@ def test_should_send_the_latest_url_when_the_same_user_requests_at_later_index()
 
     get_url(tester, by=user)
 
-    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData(1, "https://example.com/1"))]
+    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData("https://example.com/1"))]

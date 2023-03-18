@@ -14,5 +14,5 @@ class UrlRepoBase(Actor):
     urls: List[str] = field(default_factory=list)
 
     def _send_url_to_requested_index(self, address: Address):
-        self.tell(address, UrlData(self.index_to_send, self.urls[self.index_to_send]))
+        self.tell(address, UrlData(self.urls[self.index_to_send]))
         self.index_to_send += 1

@@ -10,8 +10,7 @@ class GetUrl(Message):
 
 @dataclass(frozen=True)
 class UrlData(Message):
-    index: int
-    data: str
+    url: str
 
 
 @dataclass
