@@ -16,4 +16,3 @@ class UrlData(Message):
 @dataclass
 class AddUrl(Message):
     url: str
-    ref_id: str

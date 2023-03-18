@@ -13,7 +13,7 @@ def create_active_url_repo(*, urls: List[str], default_address: Address | None =
 
     tester = ActorTester(ExhaustedUrlRepo(123))
     for url in urls:
-        add_url(tester, url, ref_id=url, by=default_address)
+        add_url(tester, url, by=default_address)
 
     tester.capture.clear_messages()
 
