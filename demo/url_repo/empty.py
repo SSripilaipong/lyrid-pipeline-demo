@@ -10,11 +10,11 @@ from .base import UrlRepoBase
 
 @use_switch
 @dataclass
-class ExhaustedUrlRepo(UrlRepoBase):
+class EmptyUrlRepo(UrlRepoBase):
     waiters: Deque[Address] = field(default_factory=deque)
 
     @classmethod
-    def of(cls, self: UrlRepoBase, waiters: List[Address] | None = None) -> 'ExhaustedUrlRepo':
+    def of(cls, self: UrlRepoBase, waiters: List[Address] | None = None) -> 'EmptyUrlRepo':
         return cls(
             self.buffer_size, self.index_to_send, self.urls,
             waiters=deque(waiters or []),

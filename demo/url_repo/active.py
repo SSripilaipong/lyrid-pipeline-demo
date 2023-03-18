@@ -25,5 +25,5 @@ class ActiveUrlRepo(UrlRepoBase):
     @switch.after_receive()
     def after_receive(self):
         if self.index_to_send > len(self.urls) - 1:
-            from .exhausted import ExhaustedUrlRepo
-            self.become(ExhaustedUrlRepo.of(self))
+            from .empty import EmptyUrlRepo
+            self.become(EmptyUrlRepo.of(self))
