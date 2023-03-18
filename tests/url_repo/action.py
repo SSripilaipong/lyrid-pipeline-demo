@@ -13,13 +13,10 @@ def add_url(tester: ActorTester, url: str, *, ref_id: str | None = None, by: Add
     tester.simulate.tell(AddUrl(url, ref_id=ref_id), by=by)
 
 
-def get_url(tester: ActorTester, *, subscription: str | None = None, by: Address | None = None):
+def get_url(tester: ActorTester, *, by: Address | None = None):
     by = by or Address(f"$.tester.{random_string()}")
 
-    if subscription is None:
-        subscription = random_string()
-
-    tester.simulate.tell(GetUrl(subscription), by=by)
+    tester.simulate.tell(GetUrl(), by=by)
 
 
 def random_string() -> str:

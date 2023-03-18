@@ -11,5 +11,5 @@ from ..core.url_repo import GetUrl
 class FullUrlRepo(UrlRepoBase):
 
     @switch.message(type=GetUrl)
-    def get_url_after_index(self, sender: Address, message: GetUrl):
-        self._send_url_to_requested_index(sender, message.subscription)
+    def get_url(self, sender: Address):
+        self._send_url_to_requested_index(sender)
