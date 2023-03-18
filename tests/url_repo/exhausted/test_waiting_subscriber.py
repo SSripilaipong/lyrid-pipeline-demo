@@ -14,9 +14,7 @@ def test_should_send_url_to_waiting_user_when_a_url_arrives():
 
     add_url(tester, "https://example.com/0", by=Address("$"))
 
-    assert tester.capture.get_messages() == [
-        CapturedMessage(user, UrlData("https://example.com/0")),
-    ]
+    assert tester.capture.get_messages() == [CapturedMessage(user, UrlData("https://example.com/0"))]
 
 
 def test_should_send_url_to_multiple_waiting_user_when_urls_arrive():
