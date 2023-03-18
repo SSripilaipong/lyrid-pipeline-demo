@@ -11,8 +11,3 @@ class Start(Message):
 @dataclass
 class Stop(Message):
     pass
-
-
-@dataclass
-class Ok(Message):
-    pass
