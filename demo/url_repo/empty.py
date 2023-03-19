@@ -23,14 +23,14 @@ class EmptyUrlRepo(UrlRepoBase):
 
     @switch.message(type=AddUrl)
     def add_url(self, message: AddUrl):
-        self.urls.append(message.url)
+        self._add_urls([message.url])
 
         if self.waiters:
             address = self.waiters.popleft()
-            self._send_url_to_requested_index(address)
+            self._send_next_url_to_address(address)
 
     @switch.after_receive()
     def after_receive(self):
-        if self.index_to_send <= len(self.urls) - 1 and not self.waiters:
+        if self._n_urls_left() > 0 and not self.waiters:
             from .active import ActiveUrlRepo
             self.become(ActiveUrlRepo.of(self))
