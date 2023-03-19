@@ -15,10 +15,7 @@ class EmptyUrlRepo(UrlRepoBase):
 
     @classmethod
     def of(cls, self: UrlRepoBase, waiters: List[Address] | None = None) -> 'EmptyUrlRepo':
-        return cls(
-            self.buffer_size, self.index_to_send, self.urls,
-            waiters=deque(waiters or []),
-        )
+        return cls(**self._base_params(), waiters=deque(waiters or []))
 
     @switch.message(type=GetUrl)
     def get_url(self, sender: Address):

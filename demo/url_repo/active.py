@@ -12,7 +12,7 @@ class ActiveUrlRepo(UrlRepoBase):
 
     @classmethod
     def of(cls, self: UrlRepoBase) -> 'ActiveUrlRepo':
-        return cls(self.buffer_size, self.index_to_send, self.urls)
+        return cls(**self._base_params())
 
     @switch.message(type=AddUrl)
     def add_url(self, message: AddUrl):

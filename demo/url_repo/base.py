@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Dict, Any
 
 from lyrid import Actor, use_switch, Address
 
@@ -16,3 +16,6 @@ class UrlRepoBase(Actor):
     def _send_url_to_requested_index(self, address: Address):
         self.tell(address, UrlData(self.urls[self.index_to_send]))
         self.index_to_send += 1
+
+    def _base_params(self) -> Dict[str, Any]:
+        return {key: self.__dict__[key] for key in UrlRepoBase.__annotations__}
