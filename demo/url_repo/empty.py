@@ -21,7 +21,7 @@ class EmptyUrlRepo(UrlRepoBase):
     def add_urls(self, message: AddUrls):
         self._add_urls(message.urls)
 
-        if self.waiters:
+        while len(self.waiters) > 0 and self._n_urls_left() > 0:
             address = self.waiters.popleft()
             self._send_next_url_to_address(address)
 
