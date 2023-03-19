@@ -15,6 +15,12 @@ class FullUrlRepo(UrlRepoBase):
     def get_url(self, sender: Address):
         self._send_next_url_to_address(sender)
 
+    @switch.after_receive()
+    def after_receive(self):
+        if self._n_urls_left() < self._buffer_size():
+            from .active import ActiveUrlRepo
+            self.become(ActiveUrlRepo.of(self))
+
     @classmethod
     def create(cls, urls: List[str]) -> UrlRepoBase:
         return FullUrlRepo(len(urls), urls=urls)
