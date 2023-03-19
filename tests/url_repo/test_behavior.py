@@ -1,3 +1,4 @@
+from demo.core import common
 from demo.url_repo import EmptyUrlRepo
 from tests.url_repo.action import add_urls, get_url
 from tests.url_repo.active.factory import create_active_url_repo
@@ -16,3 +17,11 @@ def test_should_not_add_urls_more_than_buffer_size():
     get_url(tester)
     assert len(tester.capture.get_messages()) == 0
     assert isinstance(tester.current_actor, EmptyUrlRepo)
+
+
+def test_should_reply_ok_when_asked_to_stop():
+    tester = create_active_url_repo(urls=["https://example.com/0"])
+
+    ask_id = tester.simulate.ask(common.Stop())
+
+    assert tester.capture.get_reply(ask_id) == common.Ok()

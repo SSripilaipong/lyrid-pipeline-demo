@@ -1,8 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
 
-from lyrid import Actor, use_switch, Address
+from lyrid import Actor, use_switch, Address, switch
 
+from demo.core import common
 from demo.core.url_repo import UrlData
 
 
@@ -12,6 +13,10 @@ class UrlRepoBase(Actor):
     buffer_size: int
     index_to_send: int = 0
     urls: List[str] = field(default_factory=list)
+
+    @switch.ask(type=common.Stop)
+    def ask_to_stop(self, sender: Address, ref_id: str):
+        self.reply(sender, common.Ok(), ref_id=ref_id)
 
     def _send_next_url_to_address(self, address: Address):
         self.tell(address, UrlData(self.urls[self.index_to_send]))

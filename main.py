@@ -3,15 +3,15 @@ import time
 from lyrid import ActorSystem
 
 from demo.core import common
-from demo.url_repo import ActiveUrlRepo
+from demo.url_repo import create_url_repo
 
 
 def main():
     system = ActorSystem()
-    url_repo = system.spawn(ActiveUrlRepo(), initial_message=common.Start())
+    url_repo = system.spawn(create_url_repo(500), initial_message=common.Start())
     time.sleep(1)
 
-    print(system.ask(url_repo, common.Stop()))
+    print("stopped:", system.ask(url_repo, common.Stop()))
     system.force_stop()
 
 
