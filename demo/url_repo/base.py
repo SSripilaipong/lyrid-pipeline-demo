@@ -27,7 +27,10 @@ class UrlRepoBase(Actor):
         return self.buffer_size
 
     def _add_urls(self, urls: List[str]):
-        self.urls.extend(urls)
+        space_left = self._buffer_size() - self._n_urls_left()
+        n_urls_to_add = min(len(urls), space_left)
+
+        self.urls.extend(urls[:n_urls_to_add])
 
 
 def create_url_repo(buffer_size: int) -> UrlRepoBase:
