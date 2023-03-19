@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 from lyrid import use_switch, switch, Address
 
@@ -13,3 +14,7 @@ class FullUrlRepo(UrlRepoBase):
     @switch.message(type=GetUrl)
     def get_url(self, sender: Address):
         self._send_next_url_to_address(sender)
+
+    @classmethod
+    def create(cls, urls: List[str]) -> UrlRepoBase:
+        return FullUrlRepo(len(urls), urls=urls)

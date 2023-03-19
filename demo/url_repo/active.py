@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 from lyrid import use_switch, switch, Address
 
@@ -9,11 +10,6 @@ from .base import UrlRepoBase
 @use_switch
 @dataclass
 class ActiveUrlRepo(UrlRepoBase):
-
-    @classmethod
-    def of(cls, self: UrlRepoBase) -> 'ActiveUrlRepo':
-        return cls(**self._base_params())
-
     @switch.message(type=AddUrls)
     def add_urls(self, message: AddUrls):
         self._add_urls(message.urls)
@@ -27,3 +23,11 @@ class ActiveUrlRepo(UrlRepoBase):
         if self._n_urls_left() == 0:
             from .empty import EmptyUrlRepo
             self.become(EmptyUrlRepo.of(self))
+
+    @classmethod
+    def create(cls, buffer_size: int, urls: List[str]) -> UrlRepoBase:
+        return ActiveUrlRepo(buffer_size, urls=urls)
+
+    @classmethod
+    def of(cls, self: UrlRepoBase) -> 'ActiveUrlRepo':
+        return cls(**self._base_params())

@@ -25,3 +25,8 @@ class UrlRepoBase(Actor):
 
     def _add_urls(self, urls: List[str]):
         self.urls.extend(urls)
+
+
+def create_url_repo(buffer_size: int) -> UrlRepoBase:
+    from .empty import EmptyUrlRepo
+    return EmptyUrlRepo.create(buffer_size)

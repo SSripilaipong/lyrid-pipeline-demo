@@ -1,10 +1,7 @@
 from lyrid.testing import ActorTester
 
-from demo.url_repo import EmptyUrlRepo
+from demo.url_repo import create_url_repo
 
 
 def create_empty_url_repo() -> ActorTester:
-    tester = ActorTester(EmptyUrlRepo(123))
-    tester.capture.clear_messages()
-
-    return tester
+    return ActorTester(create_url_repo(123))

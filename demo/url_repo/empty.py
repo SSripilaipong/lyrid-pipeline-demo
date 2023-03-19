@@ -13,10 +13,6 @@ from .base import UrlRepoBase
 class EmptyUrlRepo(UrlRepoBase):
     waiters: Deque[Address] = field(default_factory=deque)
 
-    @classmethod
-    def of(cls, self: UrlRepoBase, waiters: List[Address] | None = None) -> 'EmptyUrlRepo':
-        return cls(**self._base_params(), waiters=deque(waiters or []))
-
     @switch.message(type=GetUrl)
     def get_url(self, sender: Address):
         self.waiters.append(sender)
@@ -34,3 +30,11 @@ class EmptyUrlRepo(UrlRepoBase):
         if self._n_urls_left() > 0 and not self.waiters:
             from .active import ActiveUrlRepo
             self.become(ActiveUrlRepo.of(self))
+
+    @classmethod
+    def create(cls, buffer_size: int) -> UrlRepoBase:
+        return EmptyUrlRepo(buffer_size)
+
+    @classmethod
+    def of(cls, self: UrlRepoBase, waiters: List[Address] | None = None) -> 'EmptyUrlRepo':
+        return cls(**self._base_params(), waiters=deque(waiters or []))
