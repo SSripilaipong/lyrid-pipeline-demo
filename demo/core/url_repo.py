@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 from lyrid import Message
 
@@ -14,5 +15,5 @@ class UrlData(Message):
 
 
 @dataclass
-class AddUrl(Message):
-    url: str
+class AddUrls(Message):
+    urls: List[str]

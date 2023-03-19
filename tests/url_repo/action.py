@@ -1,15 +1,16 @@
 import uuid
+from typing import List
 
 from lyrid import Address
 from lyrid.testing import ActorTester
 
-from demo.core.url_repo import AddUrl, GetUrl
+from demo.core.url_repo import AddUrls, GetUrl
 
 
-def add_url(tester: ActorTester, url: str, *, by: Address | None = None):
+def add_urls(tester: ActorTester, urls: List[str], *, by: Address | None = None):
     by = by or Address(f"$.tester.{random_string()}")
 
-    tester.simulate.tell(AddUrl(url), by=by)
+    tester.simulate.tell(AddUrls(urls), by=by)
 
 
 def get_url(tester: ActorTester, *, by: Address | None = None):

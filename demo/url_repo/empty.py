@@ -4,7 +4,7 @@ from typing import List, Deque
 
 from lyrid import use_switch, switch, Address
 
-from demo.core.url_repo import AddUrl, GetUrl
+from demo.core.url_repo import AddUrls, GetUrl
 from .base import UrlRepoBase
 
 
@@ -21,9 +21,9 @@ class EmptyUrlRepo(UrlRepoBase):
     def get_url(self, sender: Address):
         self.waiters.append(sender)
 
-    @switch.message(type=AddUrl)
-    def add_url(self, message: AddUrl):
-        self._add_urls([message.url])
+    @switch.message(type=AddUrls)
+    def add_urls(self, message: AddUrls):
+        self._add_urls(message.urls)
 
         if self.waiters:
             address = self.waiters.popleft()
