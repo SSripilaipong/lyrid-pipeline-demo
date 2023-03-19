@@ -1,7 +1,8 @@
 from lyrid.testing import ActorTester
 
-from demo.url_repo import create_url_repo
+from demo.url_repo import EmptyUrlRepo
 
 
-def create_empty_url_repo() -> ActorTester:
-    return ActorTester(create_url_repo(123))
+def create_empty_url_repo(*, buffer_size: int = None) -> ActorTester:
+    buffer_size = buffer_size if buffer_size is not None else 123
+    return ActorTester(EmptyUrlRepo.create(buffer_size))

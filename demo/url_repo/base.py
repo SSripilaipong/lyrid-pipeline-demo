@@ -23,6 +23,9 @@ class UrlRepoBase(Actor):
     def _n_urls_left(self) -> int:
         return len(self.urls) - self.index_to_send
 
+    def _buffer_size(self) -> int:
+        return self.buffer_size
+
     def _add_urls(self, urls: List[str]):
         self.urls.extend(urls)
 

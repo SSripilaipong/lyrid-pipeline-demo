@@ -27,7 +27,11 @@ class EmptyUrlRepo(UrlRepoBase):
 
     @switch.after_receive()
     def after_receive(self):
-        if self._n_urls_left() > 0 and not self.waiters:
+        if self._n_urls_left() >= self._buffer_size():
+            from .full import FullUrlRepo
+            self.become(FullUrlRepo.of(self))
+
+        elif self._n_urls_left() > 0 and not self.waiters:
             from .active import ActiveUrlRepo
             self.become(ActiveUrlRepo.of(self))
 

@@ -18,3 +18,7 @@ class FullUrlRepo(UrlRepoBase):
     @classmethod
     def create(cls, urls: List[str]) -> UrlRepoBase:
         return FullUrlRepo(len(urls), urls=urls)
+
+    @classmethod
+    def of(cls, self: UrlRepoBase) -> UrlRepoBase:
+        return FullUrlRepo(**self._base_params())
