@@ -7,5 +7,5 @@ from demo.page_loader.base import PageLoaderBase
 class EmptyWaitingForUrlPageLoader(PageLoaderBase):
 
     @classmethod
-    def create(cls) -> PageLoaderBase:
-        return EmptyWaitingForUrlPageLoader()
+    def of(cls, self: PageLoaderBase) -> PageLoaderBase:
+        return EmptyWaitingForUrlPageLoader(**self._base_params())

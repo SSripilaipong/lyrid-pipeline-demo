@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 
-from lyrid import use_switch, switch
+from lyrid import use_switch, switch, Address
 
 from demo.core.page_loader import GetPage
+from demo.core.url_repo import GetUrl
 from demo.page_loader import EmptyWaitingForUrlPageLoader
 from demo.page_loader.base import PageLoaderBase
 
@@ -13,8 +14,10 @@ class IdlePageLoader(PageLoaderBase):
 
     @switch.message(type=GetPage)
     def get_page(self):
-        self.become(EmptyWaitingForUrlPageLoader.create())
+        self.tell(self.url_repo, GetUrl())
+
+        self.become(EmptyWaitingForUrlPageLoader.of(self))
 
     @classmethod
-    def create(cls) -> 'PageLoaderBase':
-        return IdlePageLoader()
+    def create(cls, url_repo: Address) -> 'PageLoaderBase':
+        return IdlePageLoader(url_repo)
