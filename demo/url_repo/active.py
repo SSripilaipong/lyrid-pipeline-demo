@@ -10,6 +10,7 @@ from .base import UrlRepoBase
 @use_switch
 @dataclass
 class ActiveUrlRepo(UrlRepoBase):
+
     @switch.message(type=AddUrls)
     def add_urls(self, message: AddUrls):
         self._add_urls(message.urls)
@@ -20,7 +21,11 @@ class ActiveUrlRepo(UrlRepoBase):
 
     @switch.after_receive()
     def after_receive(self):
-        if self._n_urls_left() == 0:
+        if self._n_urls_left() >= self._buffer_size():
+            from .full import FullUrlRepo
+            self.become(FullUrlRepo.of(self))
+
+        elif self._n_urls_left() == 0:
             from .empty import EmptyUrlRepo
             self.become(EmptyUrlRepo.of(self))
 
