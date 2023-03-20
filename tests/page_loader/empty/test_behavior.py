@@ -29,9 +29,9 @@ def test_should_get_next_url_when_receiving_url_data():
 
 
 def test_should_run_page_loading_background_task_when_receiving_url_data():
-    url_repo = Address("$.tester.r")
-    load_page = LoadPageMock()
-    tester = create_empty_page_loader(url_repo=url_repo, load_page=load_page.function)
+    def load_page(_: str) -> str: return ""
+
+    tester = create_empty_page_loader(load_page=load_page)
 
     receive_url_data(tester, url="https://example.com/123")
 
@@ -39,14 +39,4 @@ def test_should_run_page_loading_background_task_when_receiving_url_data():
     assert len(tasks) == 1
     task_call = tasks[0]
 
-    task_call.task(*task_call.args)
-    assert load_page.url == "https://example.com/123"
-
-
-class LoadPageMock:
-    def __init__(self):
-        self.url = None
-
-    def function(self, url: str) -> str:
-        self.url = url
-        return ""
+    assert task_call.task == load_page and task_call.args == ("https://example.com/123",)
