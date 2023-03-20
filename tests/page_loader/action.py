@@ -1,11 +1,11 @@
 from lyrid import Address
 from lyrid.testing import ActorTester
 
-from demo.core.page_loader import GetPage
+from demo.core import common
 from tests.util import random_string
 
 
-def get_page(tester: ActorTester):
+def start(tester: ActorTester):
     sender = Address(f"$.tester.{random_string()}")
 
-    tester.simulate.tell(GetPage(), by=sender)
+    tester.simulate.tell(common.Start(), by=sender)
