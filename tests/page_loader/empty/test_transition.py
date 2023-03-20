@@ -16,6 +16,7 @@ def test_should_not_become_active_if_there_is_a_waiter():
     tester = create_empty_page_loader()
     subscription = subscribe_page(tester)
     get_page(tester, subscription_key=subscription)
+    get_page(tester, subscription_key=subscription)
 
     page_loaded(tester)
 

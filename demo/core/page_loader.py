@@ -16,3 +16,8 @@ class PageLoadedEvent(Message):
 @dataclass
 class SubscribePage(Message):
     subscription_key: str
+
+
+@dataclass
+class PageData(Message):
+    content: str
