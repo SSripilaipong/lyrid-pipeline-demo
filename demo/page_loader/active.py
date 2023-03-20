@@ -14,4 +14,4 @@ class ActivePageLoader(PageLoaderBase):
 
     @classmethod
     def create(cls, url_repo: Address) -> 'PageLoaderBase':
-        return ActivePageLoader(url_repo)
+        return ActivePageLoader(url_repo, lambda _: "")

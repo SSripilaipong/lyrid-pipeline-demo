@@ -19,10 +19,34 @@ def test_should_send_loaded_page_to_an_existing_waiter_first():
     assert CapturedMessage(subscriber, PageData("<html>Done!</html>")) in tester.capture.get_messages()
 
 
-def test_should_get_next_url_after_receiving_url_data():
+def test_should_get_next_url_when_receiving_url_data():
     url_repo = Address("$.tester.r")
     tester = create_empty_page_loader(url_repo=url_repo)
 
     receive_url_data(tester)
 
     assert CapturedMessage(url_repo, GetUrl()) in tester.capture.get_messages()
+
+
+def test_should_run_page_loading_background_task_when_receiving_url_data():
+    url_repo = Address("$.tester.r")
+    load_page = LoadPageMock()
+    tester = create_empty_page_loader(url_repo=url_repo, load_page=load_page.function)
+
+    receive_url_data(tester, url="https://example.com/123")
+
+    tasks = tester.capture.get_background_tasks()
+    assert len(tasks) == 1
+    task_call = tasks[0]
+
+    task_call.task(*task_call.args)
+    assert load_page.url == "https://example.com/123"
+
+
+class LoadPageMock:
+    def __init__(self):
+        self.url = None
+
+    def function(self, url: str) -> str:
+        self.url = url
+        return ""

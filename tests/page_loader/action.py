@@ -13,13 +13,13 @@ def start(tester: ActorTester):
     tester.simulate.tell(common.Start(), by=sender)
 
 
-def page_loaded(tester: ActorTester, *, content: str = None):
+def page_loaded(tester: ActorTester, *, content: str | None = None):
     content = content if content is not None else "<html>Hello</html>"
 
     tester.simulate.tell(PageLoadedEvent(content), by=tester.actor_address)
 
 
-def subscribe_page(tester: ActorTester, *, sender: Address = None) -> str:
+def subscribe_page(tester: ActorTester, *, sender: Address | None = None) -> str:
     sender = sender if sender is not None else random_address()
     subscription_key = random_string()
 
@@ -28,14 +28,15 @@ def subscribe_page(tester: ActorTester, *, sender: Address = None) -> str:
     return subscription_key
 
 
-def get_page(tester: ActorTester, *, subscription_key: str = None, sender: Address = None):
+def get_page(tester: ActorTester, *, subscription_key: str | None = None, sender: Address | None = None):
     sender = sender if sender is not None else random_address()
     subscription_key = subscription_key if subscription_key is not None else random_string()
 
     tester.simulate.tell(GetPage(subscription_key), by=sender)
 
 
-def receive_url_data(tester: ActorTester):
+def receive_url_data(tester: ActorTester, *, url: str | None = None):
     sender = random_address()
+    url = url if url is not None else "https://example.com/999"
 
-    tester.simulate.tell(UrlData("https://example.com/999"), by=sender)
+    tester.simulate.tell(UrlData(url), by=sender)

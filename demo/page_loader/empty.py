@@ -1,6 +1,6 @@
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Deque
+from typing import Deque, Callable
 
 from lyrid import Address, switch, use_switch
 
@@ -22,8 +22,9 @@ class EmptyPageLoader(PageLoaderBase):
     waiters: Deque[Waiter] = field(default_factory=deque)
 
     @switch.message(type=UrlData)
-    def receive_url_data(self):
+    def receive_url_data(self, message: UrlData):
         self._get_url_from_repo()
+        self._run_load_page_in_background(message.url)
 
     @switch.message(type=PageLoadedEvent)
     def page_loaded(self, message: PageLoadedEvent):
@@ -45,5 +46,5 @@ class EmptyPageLoader(PageLoaderBase):
         return EmptyPageLoader(**self._base_params())
 
     @classmethod
-    def create(cls, url_repo: Address) -> 'PageLoaderBase':
-        return EmptyPageLoader(url_repo)
+    def create(cls, url_repo: Address, load_page: Callable[[str], str]) -> 'PageLoaderBase':
+        return EmptyPageLoader(url_repo, load_page)

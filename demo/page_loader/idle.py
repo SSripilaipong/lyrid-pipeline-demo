@@ -20,4 +20,4 @@ class IdlePageLoader(PageLoaderBase):
 
     @classmethod
     def create(cls, url_repo: Address) -> 'PageLoaderBase':
-        return IdlePageLoader(url_repo)
+        return IdlePageLoader(url_repo, lambda _: "")
