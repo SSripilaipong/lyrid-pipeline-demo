@@ -9,11 +9,6 @@ class GetPage(Message):
 
 
 @dataclass
-class PageLoadedEvent(Message):
-    content: str
-
-
-@dataclass
 class SubscribePage(Message):
     subscription_key: str
 

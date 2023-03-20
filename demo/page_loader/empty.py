@@ -4,7 +4,7 @@ from typing import Deque, Callable
 
 from lyrid import Address, switch, use_switch
 
-from demo.core.page_loader import PageLoadedEvent, GetPage, PageData
+from demo.core.page_loader import GetPage, PageData
 from demo.core.url_repo import UrlData
 from demo.page_loader import ActivePageLoader
 from demo.page_loader.base import PageLoaderBase
@@ -26,11 +26,11 @@ class EmptyPageLoader(PageLoaderBase):
         self._get_url_from_repo()
         self._run_load_page_in_background(message.url)
 
-    @switch.message(type=PageLoadedEvent)
-    def page_loaded(self, message: PageLoadedEvent):
+    @switch.background_task_exited(exception=None)
+    def page_loading_completed(self, result: str):
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
-            self.tell(waiter.address, PageData(message.content))
+            self.tell(waiter.address, PageData(result))
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address, message: GetPage):

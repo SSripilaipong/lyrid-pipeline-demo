@@ -2,7 +2,7 @@ from lyrid import Address
 from lyrid.testing import ActorTester
 
 from demo.core import common
-from demo.core.page_loader import PageLoadedEvent, SubscribePage, GetPage
+from demo.core.page_loader import SubscribePage, GetPage
 from demo.core.url_repo import UrlData
 from tests.util import random_address, random_string
 
@@ -13,10 +13,10 @@ def start(tester: ActorTester):
     tester.simulate.tell(common.Start(), by=sender)
 
 
-def page_loaded(tester: ActorTester, *, content: str | None = None):
+def page_loading_completed(tester: ActorTester, *, content: str | None = None):
     content = content if content is not None else "<html>Hello</html>"
 
-    tester.simulate.tell(PageLoadedEvent(content), by=tester.actor_address)
+    tester.simulate.background_task_exit("xxx", return_value=content)
 
 
 def subscribe_page(tester: ActorTester, *, sender: Address | None = None) -> str:
