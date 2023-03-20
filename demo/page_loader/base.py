@@ -9,4 +9,4 @@ class PageLoaderBase(Actor):
     url_repo: Address
 
     def _base_params(self) -> Dict[str, Any]:
-        return {key: self.__dict__[key] for key in self.__annotations__}
+        return {key: self.__dict__[key] for key in PageLoaderBase.__annotations__}
