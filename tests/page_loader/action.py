@@ -3,6 +3,7 @@ from lyrid.testing import ActorTester
 
 from demo.core import common
 from demo.core.page_loader import PageLoadedEvent, SubscribePage, GetPage
+from demo.core.url_repo import UrlData
 from tests.util import random_address, random_string
 
 
@@ -32,3 +33,9 @@ def get_page(tester: ActorTester, *, subscription_key: str = None, sender: Addre
     subscription_key = subscription_key if subscription_key is not None else random_string()
 
     tester.simulate.tell(GetPage(subscription_key), by=sender)
+
+
+def receive_url_data(tester: ActorTester):
+    sender = random_address()
+
+    tester.simulate.tell(UrlData("https://example.com/999"), by=sender)

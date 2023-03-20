@@ -5,6 +5,7 @@ from typing import Deque
 from lyrid import Address, switch, use_switch
 
 from demo.core.page_loader import PageLoadedEvent, GetPage, PageData
+from demo.core.url_repo import UrlData
 from demo.page_loader import ActivePageLoader
 from demo.page_loader.base import PageLoaderBase
 
@@ -19,6 +20,10 @@ class Waiter:
 @dataclass
 class EmptyPageLoader(PageLoaderBase):
     waiters: Deque[Waiter] = field(default_factory=deque)
+
+    @switch.message(type=UrlData)
+    def receive_url_data(self):
+        self._get_url_from_repo()
 
     @switch.message(type=PageLoadedEvent)
     def page_loaded(self, message: PageLoadedEvent):
