@@ -6,3 +6,8 @@ from lyrid import Message
 @dataclass
 class GetPage(Message):
     pass
+
+
+@dataclass
+class PageLoadedEvent(Message):
+    content: str
