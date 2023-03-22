@@ -33,15 +33,15 @@ class ActivePageLoader(PageLoaderBase):
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
+        if len(self.waiters) > 0:
+            waiter = self.waiters.popleft()
+            self.tell(waiter.address, result)
+
         if len(self.url_buffer) == 0:
             self.is_loading = False
         else:
             url = self.url_buffer.popleft()
             self._run_load_page_in_background(url)
-
-        if len(self.waiters) > 0:
-            waiter = self.waiters.popleft()
-            self.tell(waiter.address, result)
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address, message: GetPage):
