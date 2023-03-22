@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from lyrid import use_switch, switch, Address
 
 from demo.core import common
+from demo.core.page_loader import PageData
 from demo.page_loader import ActivePageLoader
 from demo.page_loader.base import PageLoaderBase
 
@@ -18,4 +19,4 @@ class IdlePageLoader(PageLoaderBase):
 
     @classmethod
     def create(cls, url_repo: Address) -> 'PageLoaderBase':
-        return IdlePageLoader(url_repo, lambda _: "")
+        return IdlePageLoader(url_repo, lambda _: PageData("", ""))

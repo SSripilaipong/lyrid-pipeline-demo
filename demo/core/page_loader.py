@@ -15,4 +15,5 @@ class SubscribePage(Message):
 
 @dataclass
 class PageData(Message):
+    url: str
     content: str

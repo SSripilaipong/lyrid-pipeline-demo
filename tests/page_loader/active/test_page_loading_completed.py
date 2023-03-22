@@ -13,9 +13,11 @@ def test_should_send_loaded_page_to_an_existing_waiter_first():
     subscription = subscribe_page(tester, sender=subscriber)
     get_page(tester, subscription_key=subscription, sender=subscriber)
 
-    page_loading_completed(tester, content="<html>Done!</html>")
+    page_loading_completed(tester, page=PageData("https://example.com/1", "<html>Done!</html>"))
 
-    assert CapturedMessage(subscriber, PageData("<html>Done!</html>")) in tester.capture.get_messages()
+    assert CapturedMessage(
+        subscriber, PageData("https://example.com/1", "<html>Done!</html>"),
+    ) in tester.capture.get_messages()
 
 
 def test_should_run_new_page_loading_task_once_existing_task_is_completed():

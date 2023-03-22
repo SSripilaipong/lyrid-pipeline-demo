@@ -32,14 +32,14 @@ class ActivePageLoader(PageLoaderBase):
             self._run_load_page_in_background(message.url)
 
     @switch.background_task_exited(exception=None)
-    def page_loading_completed(self, result: str):
+    def page_loading_completed(self, result: PageData):
         if len(self.url_buffer) > 0:
             url = self.url_buffer.popleft()
             self._run_load_page_in_background(url)
 
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
-            self.tell(waiter.address, PageData(result))
+            self.tell(waiter.address, result)
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address, message: GetPage):
@@ -50,5 +50,5 @@ class ActivePageLoader(PageLoaderBase):
         return ActivePageLoader(**self._base_params())
 
     @classmethod
-    def create(cls, url_repo: Address, load_page: Callable[[str], str]) -> 'PageLoaderBase':
+    def create(cls, url_repo: Address, load_page: Callable[[str], PageData]) -> 'PageLoaderBase':
         return ActivePageLoader(url_repo, load_page)
