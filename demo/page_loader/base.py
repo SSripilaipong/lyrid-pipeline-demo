@@ -15,7 +15,7 @@ class PageLoaderBase(Actor):
     def _base_params(self) -> Dict[str, Any]:
         return {key: self.__dict__[key] for key in PageLoaderBase.__annotations__}
 
-    def _get_url_from_repo(self):
+    def _ask_for_url_from_repo(self):
         self.tell(self.url_repo, GetUrl())
 
     def _run_load_page_in_background(self, url: str):

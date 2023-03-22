@@ -14,7 +14,7 @@ class IdlePageLoader(PageLoaderBase):
 
     @switch.message(type=common.Start)
     def start(self):
-        self._get_url_from_repo()
+        self._ask_for_url_from_repo()
         self.become(ActivePageLoader.of(self))
 
     @classmethod
