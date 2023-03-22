@@ -33,6 +33,7 @@ class ActivePageLoader(PageLoaderBase):
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
+        self.is_loading = False
         if len(self.url_buffer) > 0:
             url = self.url_buffer.popleft()
             self._run_load_page_in_background(url)
