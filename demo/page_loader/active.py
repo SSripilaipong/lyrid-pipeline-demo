@@ -25,16 +25,17 @@ class ActivePageLoader(PageLoaderBase):
     @switch.message(type=UrlData)
     def receive_url_data(self, message: UrlData):
         self._get_url_from_repo()
-        if self.is_loading:
-            self.url_buffer.append(message.url)
-        else:
-            self.is_loading = True
+        if not self.is_loading:
             self._run_load_page_in_background(message.url)
+            self.is_loading = True
+        else:
+            self.url_buffer.append(message.url)
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
-        self.is_loading = False
-        if len(self.url_buffer) > 0:
+        if len(self.url_buffer) == 0:
+            self.is_loading = False
+        else:
             url = self.url_buffer.popleft()
             self._run_load_page_in_background(url)
 

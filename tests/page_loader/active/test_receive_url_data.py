@@ -49,6 +49,20 @@ def test_should_run_new_page_loading_task_immediately_if_not_currently_loading_a
     _assert_have_run_default_loading_background_task(tester, "https://example.com/1")
 
 
+def test_should_not_load_new_page_loading_task_if_url_from_buffer_is_still_loading():
+    url_repo = Address("$.tester.r")
+    tester = create_active_page_loader(url_repo=url_repo)
+
+    receive_url_data(tester)  # load immediately
+    receive_url_data(tester)  # go to buffer
+    page_loading_completed(tester)  # task from buffer is loading
+    tester.capture.clear_background_tasks()
+
+    receive_url_data(tester)  # should not run
+
+    assert len(tester.capture.get_background_tasks()) == 0
+
+
 def _default_load_page(_: str) -> PageData: return PageData("", "")
 
 

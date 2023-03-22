@@ -20,7 +20,7 @@ def test_should_send_loaded_page_to_an_existing_waiter_first():
     ) in tester.capture.get_messages()
 
 
-def test_should_run_new_page_loading_task_once_existing_task_is_completed():
+def test_should_load_new_page_loading_task_from_buffer_once_existing_task_is_completed():
     url_repo = Address("$.tester.r")
     tester = create_active_page_loader(url_repo=url_repo)
 
