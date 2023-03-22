@@ -13,10 +13,11 @@ def start(tester: ActorTester):
     tester.simulate.tell(common.Start(), by=sender)
 
 
-def page_loading_completed(tester: ActorTester, *, content: str | None = None):
+def page_loading_completed(tester: ActorTester, *, content: str | None = None, task_id: str | None = None):
     content = content if content is not None else "<html>Hello</html>"
+    task_id = task_id if task_id is not None else "xxx"
 
-    tester.simulate.background_task_exit("xxx", return_value=content)
+    tester.simulate.background_task_exit(task_id, return_value=content)
 
 
 def subscribe_page(tester: ActorTester, *, sender: Address | None = None) -> str:

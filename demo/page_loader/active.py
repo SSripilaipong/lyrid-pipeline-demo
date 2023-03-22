@@ -18,18 +18,25 @@ class Waiter:
 @use_switch
 @dataclass
 class ActivePageLoader(PageLoaderBase):
+    url_buffer: Deque[str] = field(default_factory=deque)
     waiters: Deque[Waiter] = field(default_factory=deque)
     is_loading: bool = False
 
     @switch.message(type=UrlData)
     def receive_url_data(self, message: UrlData):
         self._get_url_from_repo()
-        if not self.is_loading:
+        if self.is_loading:
+            self.url_buffer.append(message.url)
+        else:
             self.is_loading = True
             self._run_load_page_in_background(message.url)
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: str):
+        if len(self.url_buffer) > 0:
+            url = self.url_buffer.popleft()
+            self._run_load_page_in_background(url)
+
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
             self.tell(waiter.address, PageData(result))
