@@ -19,7 +19,7 @@ class Waiter:
 @dataclass
 class ActivePageLoader(PageLoaderBase):
     url_buffer: Deque[str] = field(default_factory=deque)
-    waiters: Deque[Waiter] = field(default_factory=deque)
+    waiters: Deque[Address] = field(default_factory=deque)
     is_loading: bool = False
 
     @switch.message(type=UrlData)
@@ -35,7 +35,7 @@ class ActivePageLoader(PageLoaderBase):
     def page_loading_completed(self, result: PageData):
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
-            self.tell(waiter.address, result)
+            self.tell(waiter, result)
 
         if len(self.url_buffer) == 0:
             self.is_loading = False
@@ -44,8 +44,8 @@ class ActivePageLoader(PageLoaderBase):
             self._run_load_page_in_background(url)
 
     @switch.message(type=GetPage)
-    def get_page(self, sender: Address, message: GetPage):
-        self.waiters.append(Waiter(message.subscription_key, sender))
+    def get_page(self, sender: Address):
+        self.waiters.append(sender)
 
     @classmethod
     def of(cls, self: PageLoaderBase) -> PageLoaderBase:

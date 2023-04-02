@@ -2,9 +2,9 @@ from lyrid import Address
 from lyrid.testing import ActorTester
 
 from demo.core import common
-from demo.core.page_loader import SubscribePage, GetPage, PageData
+from demo.core.page_loader import GetPage, PageData
 from demo.core.url_repo import UrlData
-from tests.util import random_address, random_string
+from tests.util import random_address
 
 
 def start(tester: ActorTester):
@@ -20,20 +20,10 @@ def page_loading_completed(tester: ActorTester, *, page: PageData | None = None,
     tester.simulate.background_task_exit(task_id, return_value=page)
 
 
-def subscribe_page(tester: ActorTester, *, sender: Address | None = None) -> str:
+def get_page(tester: ActorTester, *, sender: Address | None = None):
     sender = sender if sender is not None else random_address()
-    subscription_key = random_string()
 
-    tester.simulate.tell(SubscribePage(subscription_key), by=sender)
-
-    return subscription_key
-
-
-def get_page(tester: ActorTester, *, subscription_key: str | None = None, sender: Address | None = None):
-    sender = sender if sender is not None else random_address()
-    subscription_key = subscription_key if subscription_key is not None else random_string()
-
-    tester.simulate.tell(GetPage(subscription_key), by=sender)
+    tester.simulate.tell(GetPage(), by=sender)
 
 
 def receive_url_data(tester: ActorTester, *, url: str | None = None):

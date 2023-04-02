@@ -2,21 +2,20 @@ from lyrid import Address
 from lyrid.testing import CapturedMessage
 
 from demo.core.page_loader import PageData
-from tests.page_loader.action import subscribe_page, get_page, page_loading_completed, receive_url_data
+from tests.page_loader.action import get_page, page_loading_completed, receive_url_data
 from tests.page_loader.active.factory import create_active_page_loader
 
 
 def test_should_send_loaded_page_to_an_existing_waiter_first():
     tester = create_active_page_loader()
 
-    subscriber = Address("$.tester.me")
-    subscription = subscribe_page(tester, sender=subscriber)
-    get_page(tester, subscription_key=subscription, sender=subscriber)
+    consumer = Address("$.tester.me")
+    get_page(tester, sender=consumer)
 
     page_loading_completed(tester, page=PageData("https://example.com/1", "<html>Done!</html>"))
 
     assert CapturedMessage(
-        subscriber, PageData("https://example.com/1", "<html>Done!</html>"),
+        consumer, PageData("https://example.com/1", "<html>Done!</html>"),
     ) in tester.capture.get_messages()
 
 

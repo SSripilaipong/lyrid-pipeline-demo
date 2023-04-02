@@ -5,12 +5,12 @@ from lyrid import Message
 
 @dataclass
 class GetPage(Message):
-    subscription_key: str
+    pass
 
 
 @dataclass
 class SubscribePage(Message):
-    subscription_key: str
+    pass
 
 
 @dataclass
