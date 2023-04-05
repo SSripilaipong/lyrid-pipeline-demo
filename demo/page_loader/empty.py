@@ -9,16 +9,9 @@ from demo.core.url_repo import UrlData
 from demo.page_loader.base import PageLoaderBase
 
 
-@dataclass
-class Waiter:
-    subscription_key: str
-    address: Address
-
-
 @use_switch
 @dataclass
 class ActivePageLoader(PageLoaderBase):
-    url_buffer: Deque[str] = field(default_factory=deque)
     waiters: Deque[Address] = field(default_factory=deque)
     is_loading: bool = False
 
@@ -28,8 +21,6 @@ class ActivePageLoader(PageLoaderBase):
         if not self.is_loading:
             self._run_load_page_in_background(message.url)
             self.is_loading = True
-        else:
-            self.url_buffer.append(message.url)
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
@@ -37,11 +28,7 @@ class ActivePageLoader(PageLoaderBase):
             waiter = self.waiters.popleft()
             self.tell(waiter, result)
 
-        if len(self.url_buffer) == 0:
-            self.is_loading = False
-        else:
-            url = self.url_buffer.popleft()
-            self._run_load_page_in_background(url)
+        self.is_loading = False
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):

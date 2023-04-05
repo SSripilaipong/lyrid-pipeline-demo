@@ -1,2 +1,2 @@
-from .active import ActivePageLoader
+from .empty import ActivePageLoader
 from .idle import IdlePageLoader
