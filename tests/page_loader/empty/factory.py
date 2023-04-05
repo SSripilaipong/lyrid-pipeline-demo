@@ -17,3 +17,6 @@ def create_empty_page_loader(*, url_repo: Address | None = None,
             return PageData("https://example.com/1234", "<html>abcdefg</html>")
 
     return ActorTester(EmptyPageLoader.create(url_repo, load_page))
+
+
+def _default_load_page(_: str) -> PageData: return PageData("", "")

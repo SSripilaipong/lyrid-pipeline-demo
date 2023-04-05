@@ -17,7 +17,6 @@ class EmptyPageLoader(PageLoaderBase):
 
     @switch.message(type=UrlData)
     def receive_url_data(self, message: UrlData):
-        self._ask_for_url_from_repo()
         if not self.is_loading:
             self._run_load_page_in_background(message.url)
             self.is_loading = True
