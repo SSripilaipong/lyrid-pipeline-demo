@@ -1,4 +1,4 @@
-from demo.page_loader import ActivePageLoader
+from demo.page_loader import EmptyPageLoader
 from tests.page_loader.action import start
 from tests.page_loader.idle.factory import create_idle_page_loader
 
@@ -8,4 +8,4 @@ def test_should_become_active_when_receiving_start_message():
 
     start(tester)
 
-    assert isinstance(tester.current_actor, ActivePageLoader)
+    assert isinstance(tester.current_actor, EmptyPageLoader)

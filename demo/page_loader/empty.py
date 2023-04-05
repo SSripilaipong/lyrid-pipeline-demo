@@ -11,7 +11,7 @@ from demo.page_loader.base import PageLoaderBase
 
 @use_switch
 @dataclass
-class ActivePageLoader(PageLoaderBase):
+class EmptyPageLoader(PageLoaderBase):
     waiters: Deque[Address] = field(default_factory=deque)
     is_loading: bool = False
 
@@ -22,7 +22,7 @@ class ActivePageLoader(PageLoaderBase):
             self._run_load_page_in_background(message.url)
             self.is_loading = True
 
-    @switch.background_task_exited(exception=None)
+    @ch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
@@ -36,8 +36,8 @@ class ActivePageLoader(PageLoaderBase):
 
     @classmethod
     def of(cls, self: PageLoaderBase) -> PageLoaderBase:
-        return ActivePageLoader(**self._base_params())
+        return EmptyPageLoader(**self._base_params())
 
     @classmethod
     def create(cls, url_repo: Address, load_page: Callable[[str], PageData]) -> 'PageLoaderBase':
-        return ActivePageLoader(url_repo, load_page)
+        return EmptyPageLoader(url_repo, load_page)
