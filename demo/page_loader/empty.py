@@ -22,7 +22,7 @@ class EmptyPageLoader(PageLoaderBase):
             self._run_load_page_in_background(message.url)
             self.is_loading = True
 
-    @ch.background_task_exited(exception=None)
+    @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
