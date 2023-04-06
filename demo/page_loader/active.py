@@ -5,6 +5,7 @@ from typing import Callable, List, Deque
 from lyrid import use_switch, Address, switch
 
 from demo.core.page_loader import PageData, GetPage
+from demo.core.url_repo import UrlData
 from demo.page_loader.base import PageLoaderBase
 
 
@@ -12,6 +13,10 @@ from demo.page_loader.base import PageLoaderBase
 @dataclass
 class ActivePageLoader(PageLoaderBase):
     pages: Deque[PageData] = field(default_factory=deque)
+
+    @switch.message(type=UrlData)
+    def receive_url_data(self, message: UrlData):
+        self._run_load_page_in_background(message.url)
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):

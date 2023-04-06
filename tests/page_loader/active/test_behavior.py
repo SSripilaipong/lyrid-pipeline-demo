@@ -1,10 +1,20 @@
 from lyrid.testing import CapturedMessage
 
 from demo.core.url_repo import GetUrl
-from tests.page_loader.action import get_page, page_loading_completed
+from tests.page_loader.action import get_page, page_loading_completed, receive_url_data
 from tests.page_loader.active.factory import create_active_page_loader
+from tests.page_loader.assertion import assert_have_run_loading_background_task
+from tests.page_loader.factory import default_load_page
 from tests.page_loader.util import random_page_data
-from tests.util import random_address
+from tests.util import random_address, random_url
+
+
+def test_should_run_page_loading_background_task_when_receiving_url_data():
+    tester = create_active_page_loader(load_page=default_load_page)
+
+    receive_url_data(tester, url=(url := random_url()))
+
+    assert_have_run_loading_background_task(tester, default_load_page, url)
 
 
 def test_should_buffer_loaded_page_until_a_consumer_requests_for_it():
