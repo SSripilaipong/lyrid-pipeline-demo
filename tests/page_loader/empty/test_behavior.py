@@ -43,3 +43,14 @@ def test_should_ask_for_url_from_repo_after_page_loading_completed():
     page_loading_completed(tester)
 
     assert CapturedMessage(url_repo, GetUrl()) in tester.capture.get_messages()
+
+
+def test_should_ask_for_url_from_repo_after_page_loading_completed_even_if_there_are_no_waiters():
+    tester = create_empty_page_loader(url_repo=(url_repo := random_address()), waiters=[random_address()])
+
+    page_loading_completed(tester)  # for existing waiter
+    tester.capture.clear_messages()
+
+    page_loading_completed(tester)
+
+    assert CapturedMessage(url_repo, GetUrl()) in tester.capture.get_messages()
