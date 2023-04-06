@@ -1,4 +1,9 @@
-def _assert_have_run_loading_background_task(tester, loading_task, url):
+from typing import Callable
+
+from lyrid.testing import ActorTester
+
+
+def _assert_have_run_loading_background_task(tester: ActorTester, loading_task: Callable, url: str):
     tasks = tester.capture.get_background_tasks()
     assert len(tasks) == 1
     task_call = tasks[0]
