@@ -24,7 +24,9 @@ class EmptyPageLoader(PageLoaderBase):
         if len(self.waiters) > 0:
             waiter = self.waiters.popleft()
             self.tell(waiter, result)
-        self.become(ActivePageLoader.of(self))
+
+        if len(self.waiters) == 0:
+            self.become(ActivePageLoader.of(self))
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):

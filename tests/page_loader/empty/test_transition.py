@@ -13,3 +13,12 @@ def test_should_become_active_when_no_waiters_are_waiting():
 
     page_loading_completed(tester, page=PageData("https://example.com/123", "<html>OK!</html>"))
     assert isinstance(tester.current_actor, ActivePageLoader)
+
+
+def test_should_not_become_active_when_there_still_are_waiters():
+    tester = create_empty_page_loader(waiters=[random_address(), random_address()])
+
+    receive_url_data(tester, url="https://example.com/123")
+    page_loading_completed(tester, page=PageData("https://example.com/123", "<html>OK!</html>"))
+
+    assert isinstance(tester.current_actor, EmptyPageLoader)
