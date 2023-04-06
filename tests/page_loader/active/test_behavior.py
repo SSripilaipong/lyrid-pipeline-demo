@@ -7,10 +7,8 @@ from tests.util import random_address
 
 
 def test_should_buffer_loaded_page_until_a_consumer_requests_for_it():
-    loaded_page = random_page_data()
-    tester = create_active_page_loader(pages=[loaded_page])
+    tester = create_active_page_loader(pages=[loaded_page := random_page_data()])
 
-    consumer = random_address()
-    get_page(tester, sender=consumer)
+    get_page(tester, sender=(consumer := random_address()))
 
     assert tester.capture.get_messages() == [CapturedMessage(consumer, loaded_page)]
