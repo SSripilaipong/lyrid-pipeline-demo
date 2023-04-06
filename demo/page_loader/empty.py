@@ -21,17 +21,16 @@ class EmptyPageLoader(PageLoaderBase):
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
+        if len(self.waiters) == 0:
+            self.become(ActivePageLoader.of(self))
+            return
+
         waiter = self.waiters.popleft()
         self.tell(waiter, result)
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):
         self.waiters.append(sender)
-
-    @switch.after_receive()
-    def after_receive(self):
-        if len(self.waiters) == 0:
-            self.become(ActivePageLoader.of(self))
 
     @classmethod
     def of(cls, self: PageLoaderBase, *, waiters: List[Address]) -> PageLoaderBase:
