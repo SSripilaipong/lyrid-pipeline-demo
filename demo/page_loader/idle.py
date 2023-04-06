@@ -12,9 +12,9 @@ from demo.page_loader.base import PageLoaderBase
 class IdlePageLoader(PageLoaderBase):
 
     @switch.message(type=GetPage)
-    def get_page(self):
+    def get_page(self, sender: Address):
         self._ask_for_url_from_repo()
-        self.become(EmptyPageLoader.of(self))
+        self.become(EmptyPageLoader.of(self, waiters=[sender]))
 
     @classmethod
     def create(cls, url_repo: Address) -> 'PageLoaderBase':

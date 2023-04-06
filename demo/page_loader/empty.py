@@ -1,6 +1,6 @@
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Deque, Callable
+from typing import Deque, Callable, List
 
 from lyrid import Address, switch, use_switch
 
@@ -29,8 +29,8 @@ class EmptyPageLoader(PageLoaderBase):
         self.waiters.append(sender)
 
     @classmethod
-    def of(cls, self: PageLoaderBase) -> PageLoaderBase:
-        return EmptyPageLoader(**self._base_params())
+    def of(cls, self: PageLoaderBase, *, waiters: List[Address]) -> PageLoaderBase:
+        return EmptyPageLoader(**self._base_params(), waiters=deque(waiters))
 
     @classmethod
     def create(cls, url_repo: Address, load_page: Callable[[str], PageData]) -> 'PageLoaderBase':
