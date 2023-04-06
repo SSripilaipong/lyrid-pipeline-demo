@@ -4,7 +4,8 @@ from lyrid.testing import CapturedMessage
 from demo.core.page_loader import PageData
 from tests.page_loader.action import receive_url_data, page_loading_completed, get_page
 from tests.page_loader.empty.assertion import _assert_have_run_loading_background_task
-from tests.page_loader.empty.factory import create_empty_page_loader, _default_load_page
+from tests.page_loader.empty.factory import create_empty_page_loader
+from tests.page_loader.factory import _default_load_page
 from tests.util import random_address
 
 
