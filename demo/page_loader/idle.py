@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from lyrid import use_switch, switch, Address
 
 from demo.core import common
-from demo.core.page_loader import PageData
+from demo.core.page_loader import PageData, GetPage
 from demo.page_loader import EmptyPageLoader
 from demo.page_loader.base import PageLoaderBase
 
@@ -12,9 +12,12 @@ from demo.page_loader.base import PageLoaderBase
 @dataclass
 class IdlePageLoader(PageLoaderBase):
 
+    @switch.message(type=GetPage)
+    def get_page(self):
+        self._ask_for_url_from_repo()
+
     @switch.message(type=common.Start)
     def start(self):
-        self._ask_for_url_from_repo()
         self.become(EmptyPageLoader.of(self))
 
     @classmethod
