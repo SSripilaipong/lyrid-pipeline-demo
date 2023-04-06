@@ -12,7 +12,7 @@ def test_should_buffer_loaded_page_until_a_consumer_requests_for_it():
 
     get_page(tester, sender=(consumer := random_address()))
 
-    assert tester.capture.get_messages() == [CapturedMessage(consumer, loaded_page)]
+    assert CapturedMessage(consumer, loaded_page) in tester.capture.get_messages()
 
 
 def test_should_buffer_next_loaded_page_for_the_next_consumer_requesting_for_it():

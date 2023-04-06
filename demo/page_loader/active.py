@@ -20,8 +20,15 @@ class ActivePageLoader(PageLoaderBase):
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):
-        page = self.pages.popleft()
-        self.tell(sender, page)
+        if len(self.pages) > 0:
+            page = self.pages.popleft()
+            self.tell(sender, page)
+        else:
+            self.__become_empty()
+
+    def __become_empty(self):
+        from demo.page_loader import EmptyPageLoader
+        self.become(EmptyPageLoader.of(self, waiters=[]))
 
     @classmethod
     def of(cls, self: PageLoaderBase, *, pages: List[PageData]) -> 'ActivePageLoader':

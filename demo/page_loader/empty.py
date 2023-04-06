@@ -6,7 +6,6 @@ from lyrid import Address, switch, use_switch
 
 from demo.core.page_loader import GetPage, PageData
 from demo.core.url_repo import UrlData
-from demo.page_loader import ActivePageLoader
 from demo.page_loader.base import PageLoaderBase
 
 
@@ -27,11 +26,15 @@ class EmptyPageLoader(PageLoaderBase):
             waiter = self.waiters.popleft()
             self.tell(waiter, result)
         else:
-            self.become(ActivePageLoader.of(self, pages=[result]))
+            self.__become_active(pages=[result])
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):
         self.waiters.append(sender)
+
+    def __become_active(self, *, pages: List[PageData]):
+        from demo.page_loader import ActivePageLoader
+        self.become(ActivePageLoader.of(self, pages=pages))
 
     @classmethod
     def of(cls, self: PageLoaderBase, *, waiters: List[Address]) -> 'EmptyPageLoader':
