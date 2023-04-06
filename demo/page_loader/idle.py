@@ -17,5 +17,5 @@ class IdlePageLoader(PageLoaderBase):
         self.become(EmptyPageLoader.of(self, waiters=[sender]))
 
     @classmethod
-    def create(cls, url_repo: Address) -> 'PageLoaderBase':
+    def create(cls, url_repo: Address) -> 'IdlePageLoader':
         return IdlePageLoader(url_repo, lambda _: PageData("", ""))

@@ -22,7 +22,7 @@ class EmptyPageLoader(PageLoaderBase):
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
         if len(self.waiters) == 0:
-            self.become(ActivePageLoader.of(self))
+            self.become(ActivePageLoader.of(self, pages=[result]))
             return
 
         waiter = self.waiters.popleft()
@@ -33,10 +33,10 @@ class EmptyPageLoader(PageLoaderBase):
         self.waiters.append(sender)
 
     @classmethod
-    def of(cls, self: PageLoaderBase, *, waiters: List[Address]) -> PageLoaderBase:
+    def of(cls, self: PageLoaderBase, *, waiters: List[Address]) -> 'EmptyPageLoader':
         return EmptyPageLoader.create(**self._base_params(), waiters=waiters)
 
     @classmethod
     def create(cls, url_repo: Address, load_page: Callable[[str], PageData],
-               waiters: List[Address]) -> 'PageLoaderBase':
+               waiters: List[Address]) -> 'EmptyPageLoader':
         return EmptyPageLoader(url_repo, load_page, waiters=deque(waiters))

@@ -23,10 +23,10 @@ class ActivePageLoader(PageLoaderBase):
         self.tell(sender, page)
 
     @classmethod
-    def of(cls, self: PageLoaderBase) -> 'ActivePageLoader':
-        return ActivePageLoader(**self._base_params())
+    def of(cls, self: PageLoaderBase, *, pages: List[PageData]) -> 'ActivePageLoader':
+        return ActivePageLoader.create(**self._base_params(), pages=pages)
 
     @classmethod
     def create(cls, url_repo: Address, load_page: Callable[[str], PageData], *,
-               pages: List[PageData]) -> 'PageLoaderBase':
+               pages: List[PageData]) -> 'ActivePageLoader':
         return ActivePageLoader(url_repo, load_page, pages=deque(pages))
