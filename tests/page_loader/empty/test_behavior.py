@@ -1,5 +1,6 @@
 from lyrid.testing import CapturedMessage
 
+from demo.core.url_repo import GetUrl
 from tests.page_loader.action import receive_url_data, page_loading_completed, get_page
 from tests.page_loader.empty.assertion import _assert_have_run_loading_background_task
 from tests.page_loader.empty.factory import create_empty_page_loader
@@ -34,3 +35,11 @@ def test_should_send_loaded_page_to_next_waiter():
     page_loading_completed(tester, page=(next_page_data := random_page_data()))  # for next waiter
 
     assert CapturedMessage(next_waiter, next_page_data) in tester.capture.get_messages()
+
+
+def test_should_ask_for_url_from_repo_after_page_loading_completed():
+    tester = create_empty_page_loader(url_repo=(url_repo := random_address()))
+
+    page_loading_completed(tester)
+
+    assert CapturedMessage(url_repo, GetUrl()) in tester.capture.get_messages()

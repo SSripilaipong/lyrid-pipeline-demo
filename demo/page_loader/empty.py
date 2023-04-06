@@ -27,6 +27,7 @@ class EmptyPageLoader(PageLoaderBase):
 
         waiter = self.waiters.popleft()
         self.tell(waiter, result)
+        self._ask_for_url_from_repo()
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):
