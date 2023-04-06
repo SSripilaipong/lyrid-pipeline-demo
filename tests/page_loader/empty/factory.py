@@ -5,6 +5,7 @@ from lyrid.testing import ActorTester
 
 from demo.core.page_loader import PageData
 from demo.page_loader import EmptyPageLoader
+from tests.page_loader.util import random_page_data
 from tests.util import random_address
 
 
@@ -16,6 +17,6 @@ def create_empty_page_loader(*, url_repo: Address | None = None,
 
     if load_page is None:
         def load_page(_: str) -> PageData:
-            return PageData("https://example.com/1234", "<html>abcdefg</html>")
+            return random_page_data()
 
     return ActorTester(EmptyPageLoader.create(url_repo, load_page, waiters=waiters))
