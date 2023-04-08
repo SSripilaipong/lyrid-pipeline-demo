@@ -1,5 +1,5 @@
 from collections import deque
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, List, Deque
 
 from lyrid import use_switch, Address, switch
@@ -12,7 +12,7 @@ from demo.page_loader.base import PageLoaderBase
 @use_switch
 @dataclass
 class ActivePageLoader(PageLoaderBase):
-    pages: Deque[PageData] = field(default_factory=deque)
+    pages: Deque[PageData]
 
     @switch.message(type=UrlData)
     def receive_url_data(self, message: UrlData):
