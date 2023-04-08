@@ -1,6 +1,5 @@
-from collections import deque
 from dataclasses import dataclass
-from typing import Callable, Deque, List
+from typing import Callable, Deque
 
 from lyrid import use_switch, switch, Address
 
@@ -15,16 +14,17 @@ class FullPageLoader(PageLoaderBase):
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):
-        self.tell(sender, self.pages[0])
-        self.__become_active(pages=[])
+        page = self.pages.popleft()
+        self.tell(sender, page)
+        self.__become_active()
 
-    def __become_active(self, *, pages: List[PageData]):
+    def __become_active(self):
         from demo.page_loader import ActivePageLoader
-        self.become(ActivePageLoader.of(self, pages=pages))
+        self.become(ActivePageLoader.of(self, pages=self.pages))
 
     @classmethod
-    def of(cls, self: PageLoaderBase) -> 'FullPageLoader':
-        return FullPageLoader.create(**self._base_params(), pages=deque())
+    def of(cls, self: PageLoaderBase, *, pages: Deque[PageData]) -> 'FullPageLoader':
+        return FullPageLoader.create(**self._base_params(), pages=pages)
 
     @classmethod
     def create(cls, url_repo: Address, buffer_size: int, load_page: Callable[[str], PageData],

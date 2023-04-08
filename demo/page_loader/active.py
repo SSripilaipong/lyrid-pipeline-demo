@@ -41,7 +41,7 @@ class ActivePageLoader(PageLoaderBase):
 
     def __become_full(self):
         from demo.page_loader import FullPageLoader
-        self.become(FullPageLoader.of(self))
+        self.become(FullPageLoader.of(self, pages=self.pages))
 
     @classmethod
     def of(cls, self: PageLoaderBase, *, pages: List[PageData]) -> 'ActivePageLoader':
@@ -50,4 +50,5 @@ class ActivePageLoader(PageLoaderBase):
     @classmethod
     def create(cls, url_repo: Address, buffer_size: int, load_page: Callable[[str], PageData], *,
                pages: List[PageData]) -> 'ActivePageLoader':
-        return ActivePageLoader(url_repo, buffer_size, load_page, pages=deque(pages))
+        pages_deque: Deque[PageData] = deque(pages) if not isinstance(pages, deque) else pages
+        return ActivePageLoader(url_repo, buffer_size, load_page, pages=pages_deque)
