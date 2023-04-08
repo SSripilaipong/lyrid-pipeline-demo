@@ -16,6 +16,7 @@ class FullPageLoader(PageLoaderBase):
     def get_page(self, sender: Address):
         page = self.pages.popleft()
         self.tell(sender, page)
+        self._ask_for_url_from_repo()
         self.__become_active()
 
     def __become_active(self):
