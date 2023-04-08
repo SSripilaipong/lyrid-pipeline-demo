@@ -12,6 +12,7 @@ from demo.page_loader.base import PageLoaderBase
 @use_switch
 @dataclass
 class ActivePageLoader(PageLoaderBase):
+    buffer_size: int
     pages: Deque[PageData] = field(default_factory=deque)
 
     @switch.message(type=UrlData)
@@ -22,6 +23,9 @@ class ActivePageLoader(PageLoaderBase):
     def page_loading_completed(self, result: PageData):
         self._ask_for_url_from_repo()
         self.pages.append(result)
+
+        if len(self.pages) >= self.buffer_size:
+            self.__become_full()
 
     @switch.message(type=GetPage)
     def get_page(self, sender: Address):
@@ -35,11 +39,15 @@ class ActivePageLoader(PageLoaderBase):
         from demo.page_loader import EmptyPageLoader
         self.become(EmptyPageLoader.of(self, waiters=waiters))
 
-    @classmethod
-    def of(cls, self: PageLoaderBase, *, pages: List[PageData]) -> 'ActivePageLoader':
-        return ActivePageLoader.create(**self._base_params(), pages=pages)
+    def __become_full(self):
+        from demo.page_loader import FullPageLoader
+        self.become(FullPageLoader.of(self))
 
     @classmethod
-    def create(cls, url_repo: Address, load_page: Callable[[str], PageData], *,
+    def of(cls, self: PageLoaderBase, *, pages: List[PageData]) -> 'ActivePageLoader':
+        return ActivePageLoader.create(**self._base_params(), buffer_size=0, pages=pages)
+
+    @classmethod
+    def create(cls, url_repo: Address, load_page: Callable[[str], PageData], buffer_size: int, *,
                pages: List[PageData]) -> 'ActivePageLoader':
-        return ActivePageLoader(url_repo, load_page, pages=deque(pages))
+        return ActivePageLoader(url_repo, load_page, buffer_size, pages=deque(pages))
