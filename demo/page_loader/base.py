@@ -10,6 +10,7 @@ from demo.core.url_repo import GetUrl
 @dataclass
 class PageLoaderBase(Actor):
     url_repo: Address
+    buffer_size: int
     load_page: Callable[[str], PageData]
 
     def _base_params(self) -> Dict[str, Any]:

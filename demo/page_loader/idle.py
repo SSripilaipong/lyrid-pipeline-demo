@@ -21,5 +21,5 @@ class IdlePageLoader(PageLoaderBase):
         self.become(EmptyPageLoader.of(self, waiters=waiters))
 
     @classmethod
-    def create(cls, url_repo: Address) -> 'IdlePageLoader':
-        return IdlePageLoader(url_repo, lambda _: PageData("", ""))
+    def create(cls, url_repo: Address, buffer_size: int) -> 'IdlePageLoader':
+        return IdlePageLoader(url_repo, buffer_size, lambda _: PageData("", ""))

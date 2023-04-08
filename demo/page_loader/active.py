@@ -12,7 +12,6 @@ from demo.page_loader.base import PageLoaderBase
 @use_switch
 @dataclass
 class ActivePageLoader(PageLoaderBase):
-    buffer_size: int
     pages: Deque[PageData] = field(default_factory=deque)
 
     @switch.message(type=UrlData)
@@ -45,9 +44,9 @@ class ActivePageLoader(PageLoaderBase):
 
     @classmethod
     def of(cls, self: PageLoaderBase, *, pages: List[PageData]) -> 'ActivePageLoader':
-        return ActivePageLoader.create(**self._base_params(), buffer_size=0, pages=pages)
+        return ActivePageLoader.create(**self._base_params(), pages=pages)
 
     @classmethod
-    def create(cls, url_repo: Address, load_page: Callable[[str], PageData], buffer_size: int, *,
+    def create(cls, url_repo: Address, buffer_size: int, load_page: Callable[[str], PageData], *,
                pages: List[PageData]) -> 'ActivePageLoader':
-        return ActivePageLoader(url_repo, load_page, buffer_size, pages=deque(pages))
+        return ActivePageLoader(url_repo, buffer_size, load_page, pages=deque(pages))

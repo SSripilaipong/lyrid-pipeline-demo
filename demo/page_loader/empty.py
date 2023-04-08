@@ -41,6 +41,6 @@ class EmptyPageLoader(PageLoaderBase):
         return EmptyPageLoader.create(**self._base_params(), waiters=waiters)
 
     @classmethod
-    def create(cls, url_repo: Address, load_page: Callable[[str], PageData],
+    def create(cls, url_repo: Address, buffer_size: int, load_page: Callable[[str], PageData],
                waiters: List[Address]) -> 'EmptyPageLoader':
-        return EmptyPageLoader(url_repo, load_page, waiters=deque(waiters))
+        return EmptyPageLoader(url_repo, buffer_size, load_page, waiters=deque(waiters))

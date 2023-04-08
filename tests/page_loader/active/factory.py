@@ -20,4 +20,4 @@ def create_active_page_loader(*, url_repo: Address | None = None, pages: List[Pa
         def load_page(_: str) -> PageData:
             return random_page_data()
 
-    return ActorTester(ActivePageLoader.create(url_repo, load_page, buffer_size, pages=pages))
+    return ActorTester(ActivePageLoader.create(url_repo, buffer_size, load_page, pages=pages))
