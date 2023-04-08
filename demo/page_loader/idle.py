@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Callable
 
 from lyrid import use_switch, switch, Address
 
@@ -21,5 +21,5 @@ class IdlePageLoader(PageLoaderBase):
         self.become(EmptyPageLoader.of(self, waiters=waiters))
 
     @classmethod
-    def create(cls, url_repo: Address, buffer_size: int) -> 'IdlePageLoader':
-        return IdlePageLoader(url_repo, buffer_size, lambda _: PageData("", ""))
+    def create(cls, url_repo: Address, buffer_size: int, load_page: Callable[[str], PageData]) -> 'IdlePageLoader':
+        return IdlePageLoader(url_repo, buffer_size, load_page)
