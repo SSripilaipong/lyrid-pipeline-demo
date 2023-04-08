@@ -20,10 +20,11 @@ class ActivePageLoader(PageLoaderBase):
 
     @switch.background_task_exited(exception=None)
     def page_loading_completed(self, result: PageData):
-        self._ask_for_url_from_repo()
         self.pages.append(result)
 
-        if len(self.pages) >= self.buffer_size:
+        if len(self.pages) < self.buffer_size:
+            self._ask_for_url_from_repo()
+        else:
             self.__become_full()
 
     @switch.message(type=GetPage)

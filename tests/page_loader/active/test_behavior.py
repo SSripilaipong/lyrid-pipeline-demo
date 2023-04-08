@@ -43,3 +43,11 @@ def test_should_ask_for_url_from_repo_after_page_loading_task_is_completed():
     page_loading_completed(tester)
 
     assert CapturedMessage(url_repo, GetUrl()) in tester.capture.get_messages()
+
+
+def test_should_not_ask_for_more_url_when_pages_buffer_is_full():
+    tester = create_active_page_loader(buffer_size=3, pages=[random_page_data(), random_page_data()])
+
+    page_loading_completed(tester)  # buffer full
+
+    assert not any(isinstance(capture.message, GetUrl) for capture in tester.capture.get_messages())
