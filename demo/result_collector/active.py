@@ -1,16 +1,16 @@
 from dataclasses import dataclass, field
 from typing import Callable, List
 
-from lyrid import Actor, use_switch, switch, Address
+from lyrid import use_switch, switch, Address
 
 from demo.core.result_collector import ResultData, GetResult
+from demo.result_collector.base import ResultCollectorBase
 
 
 @use_switch
 @dataclass
-class ActiveResultCollector(Actor):
+class ActiveResultCollector(ResultCollectorBase):
     processor: Address
-    buffer_size: int
     save: Callable[[List[ResultData]], None]
 
     buffer: List[ResultData] = field(default_factory=list)
@@ -25,6 +25,11 @@ class ActiveResultCollector(Actor):
             self.buffer = []
 
     @classmethod
+    def of(cls, self: ResultCollectorBase, processor: Address,
+           save: Callable[[List[ResultData]], None]) -> 'ActiveResultCollector':
+        return ActiveResultCollector.create(buffer_size=self.buffer_size, processor=processor, save=save)
+
+    @classmethod
     def create(cls, processor: Address, buffer_size: int,
                save: Callable[[List[ResultData]], None]) -> 'ActiveResultCollector':
-        return ActiveResultCollector(processor=processor, buffer_size=buffer_size, save=save)
+        return ActiveResultCollector(buffer_size=buffer_size, processor=processor, save=save)
