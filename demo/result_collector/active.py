@@ -10,9 +10,6 @@ from demo.result_collector.base import ResultCollectorBase
 @use_switch
 @dataclass
 class ActiveResultCollector(ResultCollectorBase):
-    processor: Address
-    save: Callable[[List[ResultData]], None]
-
     buffer: List[ResultData] = field(default_factory=list)
 
     @switch.message(type=ResultData)
@@ -25,9 +22,8 @@ class ActiveResultCollector(ResultCollectorBase):
             self.buffer = []
 
     @classmethod
-    def of(cls, self: ResultCollectorBase, processor: Address,
-           save: Callable[[List[ResultData]], None]) -> 'ActiveResultCollector':
-        return ActiveResultCollector.create(buffer_size=self.buffer_size, processor=processor, save=save)
+    def of(cls, self: ResultCollectorBase) -> 'ActiveResultCollector':
+        return ActiveResultCollector.create(**self._base_params())
 
     @classmethod
     def create(cls, processor: Address, buffer_size: int,

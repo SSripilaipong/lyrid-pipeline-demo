@@ -2,9 +2,9 @@ from lyrid.testing import CapturedMessage
 
 from demo.core.result_collector import GetResult
 from tests.result_collector.active.action import receive_result_data, saving_completed
-from tests.result_collector.active.assertion import assert_have_run_saving_background_task
 from tests.result_collector.active.factory import create_active_result_collector, default_save
 from tests.result_collector.active.util import random_result_data
+from tests.result_collector.assertion import assert_have_run_saving_background_task
 from tests.util import random_address
 
 
