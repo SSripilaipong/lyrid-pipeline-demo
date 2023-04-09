@@ -18,14 +18,16 @@ class ActiveResultCollector(ResultCollectorBase):
         self._ask_for_result()
         self.buffer.append(message)
 
+    @switch.background_task_exited(exception=None)
+    def saving_task_completed(self):
+        self.is_busy = False
+
+    @switch.after_receive()
+    def after_receive(self):
         if len(self.buffer) >= self.buffer_size and not self.is_busy:
             self.is_busy = True
             self.run_in_background(self.save, args=(self.buffer,))
             self.buffer = []
-
-    @switch.background_task_exited(exception=None)
-    def saving_task_completed(self):
-        self.is_busy = False
 
     @classmethod
     def of(cls, self: ResultCollectorBase) -> 'ActiveResultCollector':

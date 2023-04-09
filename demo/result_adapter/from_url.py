@@ -19,7 +19,8 @@ class UrlRepoResultAdapter(Actor):
 
     @switch.message(type=UrlData)
     def url_data(self, message: UrlData):
-        self.tell(self.collector, ResultData(message.url))
+        if self.collector is not None:
+            self.tell(self.collector, ResultData(message.url))
 
 
 def create_result_adapter_from_url(url_repo: Address) -> 'UrlRepoResultAdapter':

@@ -49,3 +49,18 @@ def test_should_not_ask_for_result_if_previous_saving_task_doesnt_finish():
     receive_result_data(tester)
     receive_result_data(tester)
     assert tester.capture.get_background_tasks() == []
+
+
+def test_should_save_results_after_saving_task_completed_if_the_results_are_full():
+    tester = create_active_result_collector(buffer_size=2, save=default_save)
+
+    receive_result_data(tester)
+    receive_result_data(tester)  # first saving task starts
+
+    receive_result_data(tester, result_data=(result3 := random_result_data()))
+    receive_result_data(tester, result_data=(result4 := random_result_data()))
+    tester.capture.clear_background_tasks()
+
+    saving_completed(tester)
+
+    assert_have_run_saving_background_task(tester, default_save, [result3, result4])
