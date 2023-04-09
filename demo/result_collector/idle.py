@@ -16,7 +16,7 @@ class IdleResultCollector(ResultCollectorBase):
     @switch.message(type=common.Start)
     def start(self):
         self.tell(self.processor, GetResult())
-        self.become(ActiveResultCollector.of(self, processor=Address("$"), save=None))
+        self.become(ActiveResultCollector.of(self, processor=self.processor, save=None))
 
     @classmethod
     def create(cls, *, buffer_size: int, processor: Address) -> 'IdleResultCollector':
