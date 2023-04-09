@@ -1,1 +1,1 @@
-from .active import ActiveResultCollector
+from .factory import create_result_collector

@@ -5,7 +5,7 @@ from lyrid import use_switch, switch, Address
 
 from demo.core import common
 from demo.core.result_collector import ResultData
-from demo.result_collector import ActiveResultCollector
+from demo.result_collector.active import ActiveResultCollector
 from demo.result_collector.base import ResultCollectorBase
 
 

@@ -4,7 +4,7 @@ from lyrid import Address
 from lyrid.testing import ActorTester
 
 from demo.core.result_collector import ResultData
-from demo.result_collector import ActiveResultCollector
+from demo.result_collector.active import ActiveResultCollector
 from tests.util import random_address
 
 

@@ -1,7 +1,7 @@
 from lyrid.testing import CapturedMessage
 
 from demo.core.result_collector import GetResult
-from demo.result_collector import ActiveResultCollector
+from demo.result_collector.active import ActiveResultCollector
 from tests.action import start
 from tests.result_collector.idle.factory import create_idle_result_collector
 from tests.util import random_address
