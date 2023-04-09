@@ -11,3 +11,16 @@ def test_should_save_results_when_result_are_fully_buffered():
     receive_result_data(tester, result_data=(result2 := random_result_data()))
 
     assert_have_run_saving_background_task(tester, default_save, [result1, result2])
+
+
+def test_should_save_second_batch_without_the_first_batch():
+    tester = create_result_collector(buffer_size=2, save=default_save)
+
+    receive_result_data(tester)
+    receive_result_data(tester)
+    tester.capture.clear_background_tasks()
+
+    receive_result_data(tester, result_data=(result3 := random_result_data()))
+    receive_result_data(tester, result_data=(result4 := random_result_data()))
+
+    assert_have_run_saving_background_task(tester, default_save, [result3, result4])

@@ -20,3 +20,4 @@ class ResultCollector(Actor):
 
         if len(self.buffer) >= self.buffer_size:
             self.run_in_background(self.save, args=(self.buffer,))
+            self.buffer = []
