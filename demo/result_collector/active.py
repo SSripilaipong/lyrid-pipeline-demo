@@ -23,3 +23,8 @@ class ActiveResultCollector(Actor):
         if len(self.buffer) >= self.buffer_size:
             self.run_in_background(self.save, args=(self.buffer,))
             self.buffer = []
+
+    @classmethod
+    def create(cls, processor: Address, buffer_size: int,
+               save: Callable[[List[ResultData]], None]) -> 'ActiveResultCollector':
+        return ActiveResultCollector(processor=processor, buffer_size=buffer_size, save=save)
