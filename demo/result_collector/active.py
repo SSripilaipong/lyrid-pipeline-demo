@@ -3,7 +3,7 @@ from typing import Callable, List
 
 from lyrid import use_switch, switch, Address
 
-from demo.core.result_collector import ResultData, GetResult
+from demo.core.result_collector import ResultData
 from demo.result_collector.base import ResultCollectorBase
 
 
@@ -15,7 +15,7 @@ class ActiveResultCollector(ResultCollectorBase):
 
     @switch.message(type=ResultData)
     def result_data(self, message: ResultData):
-        self.tell(self.processor, GetResult())
+        self._ask_for_result()
         self.buffer.append(message)
 
         if len(self.buffer) >= self.buffer_size and not self.is_busy:
