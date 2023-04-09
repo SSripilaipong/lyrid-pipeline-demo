@@ -4,7 +4,7 @@ from lyrid import Address
 from lyrid.testing import ActorTester
 
 from demo.core.page_loader import PageData
-from demo.page_loader import ActivePageLoader
+from demo.page_loader.active import ActivePageLoader
 from tests.page_loader.util import random_page_data
 from tests.util import random_address
 

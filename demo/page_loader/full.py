@@ -20,7 +20,7 @@ class FullPageLoader(PageLoaderBase):
         self.__become_active()
 
     def __become_active(self):
-        from demo.page_loader import ActivePageLoader
+        from .active import ActivePageLoader
         self.become(ActivePageLoader.of(self, pages=self.pages))
 
     @classmethod

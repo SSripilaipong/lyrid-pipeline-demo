@@ -17,7 +17,7 @@ class IdlePageLoader(PageLoaderBase):
         self.__become_empty(waiters=[sender])
 
     def __become_empty(self, waiters: List[Address]):
-        from demo.page_loader import EmptyPageLoader
+        from .empty import EmptyPageLoader
         self.become(EmptyPageLoader.of(self, waiters=waiters))
 
     @classmethod

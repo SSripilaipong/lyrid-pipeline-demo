@@ -33,7 +33,7 @@ class EmptyPageLoader(PageLoaderBase):
         self.waiters.append(sender)
 
     def __become_active(self, *, pages: List[PageData]):
-        from demo.page_loader import ActivePageLoader
+        from .active import ActivePageLoader
         self.become(ActivePageLoader.of(self, pages=pages))
 
     @classmethod

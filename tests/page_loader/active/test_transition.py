@@ -1,4 +1,6 @@
-from demo.page_loader import EmptyPageLoader, ActivePageLoader, FullPageLoader
+from demo.page_loader.active import ActivePageLoader
+from demo.page_loader.empty import EmptyPageLoader
+from demo.page_loader.full import FullPageLoader
 from tests.page_loader.action import get_page, page_loading_completed
 from tests.page_loader.active.factory import create_active_page_loader
 from tests.page_loader.util import random_page_data

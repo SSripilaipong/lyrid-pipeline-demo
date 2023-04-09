@@ -1,1 +1,1 @@
-from .from_url import create_result_adapter_from_url
+from .from_repo import create_repo_result_adapter

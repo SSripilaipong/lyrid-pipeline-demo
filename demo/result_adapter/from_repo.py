@@ -8,7 +8,7 @@ from demo.core.url_repo import GetUrl, UrlData
 
 @use_switch
 @dataclass
-class UrlRepoResultAdapter(Actor):
+class RepoResultAdapter(Actor):
     url_repo: Address
     collector: Address | None = None
 
@@ -23,5 +23,5 @@ class UrlRepoResultAdapter(Actor):
             self.tell(self.collector, ResultData(message.url))
 
 
-def create_result_adapter_from_url(url_repo: Address) -> 'UrlRepoResultAdapter':
-    return UrlRepoResultAdapter(url_repo=url_repo)
+def create_repo_result_adapter(url_repo: Address) -> RepoResultAdapter:
+    return RepoResultAdapter(url_repo=url_repo)

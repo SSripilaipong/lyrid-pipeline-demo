@@ -36,11 +36,11 @@ class ActivePageLoader(PageLoaderBase):
             self.__become_empty(waiters=[sender])
 
     def __become_empty(self, waiters):
-        from demo.page_loader import EmptyPageLoader
+        from .empty import EmptyPageLoader
         self.become(EmptyPageLoader.of(self, waiters=waiters))
 
     def __become_full(self):
-        from demo.page_loader import FullPageLoader
+        from .full import FullPageLoader
         self.become(FullPageLoader.of(self, pages=self.pages))
 
     @classmethod

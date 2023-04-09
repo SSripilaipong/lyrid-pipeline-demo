@@ -1,4 +1,4 @@
-from demo.page_loader import EmptyPageLoader
+from demo.page_loader.empty import EmptyPageLoader
 from tests.page_loader.action import get_page
 from tests.page_loader.idle.factory import create_idle_page_loader
 
