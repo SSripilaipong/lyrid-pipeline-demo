@@ -37,3 +37,15 @@ def test_should_ask_for_result_from_processor_after_receiving_result():
     receive_result_data(tester)
 
     assert CapturedMessage(receiver=processor, message=GetResult()) in tester.capture.get_messages()
+
+
+def test_should_not_ask_for_result_if_previous_saving_task_doesnt_finish():
+    tester = create_active_result_collector(buffer_size=2)
+
+    receive_result_data(tester)
+    receive_result_data(tester)  # first saving task starts
+    tester.capture.clear_background_tasks()
+
+    receive_result_data(tester)
+    receive_result_data(tester)
+    assert tester.capture.get_background_tasks() == []
