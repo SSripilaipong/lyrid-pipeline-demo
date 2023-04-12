@@ -32,7 +32,7 @@ def test_should_save_second_batch_without_the_first_batch():
 
 
 def test_should_ask_for_result_from_processor_after_receiving_result():
-    tester = create_active_result_collector(processor=(processor := random_address()))
+    tester = create_active_result_collector(processors=[processor := random_address()])
 
     receive_result_data(tester)
 

@@ -23,7 +23,7 @@ def test_main():
         url_repo = system.spawn(create_url_repo(buffer_size=10), initial_message=common.Start())
         loader = system.spawn(create_page_loader(url_repo, buffer_size=5, load_page=load_page))
         adapter = system.spawn(create_loader_result_adapter(loader))
-        system.spawn(create_result_collector(adapter, buffer_size=2, save=result_queue.put),
+        system.spawn(create_result_collector([adapter], buffer_size=2, save=result_queue.put),
                      initial_message=common.Start())
 
         system.tell(url_repo, AddUrls([random_url() for _ in range(20)]))

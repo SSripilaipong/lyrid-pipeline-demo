@@ -34,6 +34,6 @@ class ActiveResultCollector(ResultCollectorBase):
         return ActiveResultCollector.create(**self._base_params())
 
     @classmethod
-    def create(cls, processor: Address, buffer_size: int,
+    def create(cls, processors: List[Address], buffer_size: int,
                save: Callable[[List[ResultData]], None]) -> 'ActiveResultCollector':
-        return ActiveResultCollector(buffer_size=buffer_size, processor=processor, save=save)
+        return ActiveResultCollector(buffer_size=buffer_size, processors=processors, save=save)

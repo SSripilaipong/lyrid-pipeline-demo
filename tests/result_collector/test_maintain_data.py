@@ -23,7 +23,7 @@ def test_should_maintain_buffer_size_between_idle_state_and_active_state():
 
 
 def test_should_maintain_processor_address_between_idle_state_and_active_state():
-    tester = create_idle_result_collector(processor=(processor := random_address()))
+    tester = create_idle_result_collector(processors=[processor := random_address()])
 
     start(tester)  # become active
     tester.capture.clear_messages()

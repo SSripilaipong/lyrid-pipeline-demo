@@ -14,7 +14,7 @@ def main():
     system = ActorSystem()
     url_repo = system.spawn(create_url_repo(buffer_size=10), initial_message=common.Start())
     adapter = system.spawn(create_repo_result_adapter(url_repo))
-    system.spawn(create_result_collector(adapter, buffer_size=4, save=print), initial_message=common.Start())
+    system.spawn(create_result_collector([adapter], buffer_size=4, save=print), initial_message=common.Start())
     time.sleep(1)
 
     system.tell(url_repo, AddUrls([random_url() for _ in range(20)]))

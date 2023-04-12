@@ -19,6 +19,6 @@ class IdleResultCollector(ResultCollectorBase):
         self.become(ActiveResultCollector.of(self))
 
     @classmethod
-    def create(cls, *, buffer_size: int, processor: Address,
+    def create(cls, *, buffer_size: int, processors: List[Address],
                save: Callable[[List[ResultData]], None]) -> 'IdleResultCollector':
-        return IdleResultCollector(buffer_size=buffer_size, processor=processor, save=save)
+        return IdleResultCollector(buffer_size=buffer_size, processors=processors, save=save)

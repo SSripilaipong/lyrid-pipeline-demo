@@ -16,7 +16,7 @@ def test_should_become_active_after_start_message():
 
 
 def test_should_ask_for_result_from_processor():
-    tester = create_idle_result_collector(processor=(processor := random_address()))
+    tester = create_idle_result_collector(processors=[processor := random_address()])
 
     start(tester)
 
