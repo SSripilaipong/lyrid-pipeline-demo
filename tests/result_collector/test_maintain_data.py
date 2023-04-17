@@ -28,7 +28,7 @@ def test_should_maintain_processor_address_between_idle_state_and_active_state()
     start(tester)  # become active
     tester.capture.clear_messages()
 
-    receive_result_data(tester)
+    receive_result_data(tester, by=processor)
     assert CapturedMessage(processor, GetResult()) in tester.capture.get_messages()
 
 

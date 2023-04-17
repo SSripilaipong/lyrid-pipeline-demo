@@ -34,9 +34,17 @@ def test_should_save_second_batch_without_the_first_batch():
 def test_should_ask_for_result_from_processor_after_receiving_result():
     tester = create_active_result_collector(processors=[processor := random_address()])
 
-    receive_result_data(tester)
+    receive_result_data(tester, by=processor)
 
     assert CapturedMessage(receiver=processor, message=GetResult()) in tester.capture.get_messages()
+
+
+def test_should_not_ask_for_result_from_other_processor():
+    tester = create_active_result_collector(processors=[processor1 := random_address(), processor2 := random_address()])
+
+    receive_result_data(tester, by=processor1)
+
+    assert CapturedMessage(receiver=processor2, message=GetResult()) not in tester.capture.get_messages()
 
 
 def test_should_not_ask_for_result_if_previous_saving_task_doesnt_finish():
