@@ -15,7 +15,7 @@ class IdleResultCollector(ResultCollectorBase):
 
     @switch.message(type=common.Start)
     def start(self):
-        self._ask_for_result()
+        self._ask_for_results_from_all_processors()
         self.become(ActiveResultCollector.of(self))
 
     @classmethod

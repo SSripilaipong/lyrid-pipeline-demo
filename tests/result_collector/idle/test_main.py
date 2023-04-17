@@ -15,9 +15,10 @@ def test_should_become_active_after_start_message():
     assert isinstance(tester.current_actor, ActiveResultCollector)
 
 
-def test_should_ask_for_result_from_processor():
-    tester = create_idle_result_collector(processors=[processor := random_address()])
+def test_should_ask_for_result_from_all_processors():
+    tester = create_idle_result_collector(processors=[processor1 := random_address(), processor2 := random_address()])
 
     start(tester)
 
-    assert CapturedMessage(processor, GetResult()) in tester.capture.get_messages()
+    assert CapturedMessage(processor1, GetResult()) in tester.capture.get_messages() and \
+           CapturedMessage(processor2, GetResult()) in tester.capture.get_messages()

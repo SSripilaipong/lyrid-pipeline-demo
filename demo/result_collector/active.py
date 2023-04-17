@@ -15,7 +15,7 @@ class ActiveResultCollector(ResultCollectorBase):
 
     @switch.message(type=ResultData)
     def result_data(self, message: ResultData):
-        self._ask_for_result()
+        self._ask_for_results_from_all_processors()
         self.buffer.append(message)
 
     @switch.background_task_exited(exception=None)
